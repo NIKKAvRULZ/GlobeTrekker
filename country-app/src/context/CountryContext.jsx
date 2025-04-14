@@ -1,88 +1,91 @@
-import { createContext, useState, useEffect, useContext } from "react";
-import {
-    fetchAllCountries,
-    fetchCountryByName,
-    fetchContriesByRegion,
-    fetchCountryByCode,
-} from '../services/api'
+import { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
+
+const API_BASE = 'https://restcountries.com/v3.1';
 
 const CountryContext = createContext();
 
 export const CountryProvider = ({ children }) => {
-    const [ countries, setCountries ] = useState([]);
-    const [ filterdCountries, setFilteredCountries ] = useState([]);
-    const [ loading, setLoading ] = useState(true);
-    const [ error, setError ] = useState(null);
-    const [ selectedCountry, setSelectedCountry ] = useState(null);
+  const [countries, setCountries] = useState([]);
+  const [filteredCountries, setFilteredCountries] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
-    useState(() =>{
-        const loadAllCountries = async () => {
-            try {
-                const data = await fetchAllCountries();
-                setCountries(data);
-                setFilteredCountries(data);
-                setLoading(false);
-            }catch(error){
-                setCountries(error.message);
-                setLoading(false);
-            }
-        };
-        loadAllCountries();
-    },[]);
+  const fetchAllCountries = async () => {
+    try {
+      const response = await axios.get(`${API_BASE}/all`);
+      return response.data;
+    } catch (err) {
+      console.error('Failed to fetch countries:', err);
+      throw new Error('Failed to load countries. Please try again later.');
+    }
+  };
 
-    const searchCountries = async(name) => {
-        if(!name.trim()){
-            setFilteredCountries(countries);
-            return;
-        }
-        try{
-            const data = await fetchCountryByName(name);
-            setFilteredCountries(data);
-        }catch(error){
-            setError(error.message);
-        }
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await fetchAllCountries();
+        setCountries(data);
+        setFilteredCountries(data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
     };
+    loadData();
+  }, []);
 
-    const fillterByRegion = async(region) => {
-        if( region === 'All'){
-            setFilteredCountries(countries);
-            return;
-        }
-        try{
-            const data = await fetchContriesByRegion(region);
-            setFilteredCountries(data);
-        }catch(error){
-            setError(error.message);
-        }
-    };
+  const searchCountries = async (name) => {
+    if (!name.trim()) {
+      setFilteredCountries(countries);
+      return;
+    }
+    try {
+      const response = await axios.get(`${API_BASE}/name/${name}`);
+      setFilteredCountries(response.data);
+    } catch (err) {
+      setFilteredCountries([]);
+      setError(new Error('No countries found matching your search'));
+    }
+  };
 
+  const filterByRegion = async (region) => {
+    if (region === 'all') {
+      setFilteredCountries(countries);
+      return;
+    }
+    try {
+      const response = await axios.get(`${API_BASE}/region/${region}`);
+      setFilteredCountries(response.data);
+    } catch (err) {
+      setError(new Error('Failed to filter by region'));
+    }
+  };
 
-    const getCountryByCode = async(code) => {
-        try{
-            const data = await fetchCountryByCode(code);
-            setSelectedCountry(data[0]);
-        }catch(error){
-            setError(error.message);
-        }
-    };
-
-    return(
-        <CountryContext.Provider
-            value={{
-                countries,
-                filterdCountries,
-                loading,
-                error,
-                selectedCountry,
-                searchCountries,
-                filterdCountries,
-                getCountryByCode,
-                setSelectedCountry,
-            }} 
-            >
-                {children}
-            </CountryContext.Provider>
-    );
+  return (
+    <CountryContext.Provider
+      value={{
+        countries,
+        filteredCountries,
+        loading,
+        error,
+        selectedCountry,
+        searchCountries,
+        filterByRegion,
+        setSelectedCountry,
+      }}
+    >
+      {children}
+    </CountryContext.Provider>
+  );
 };
 
-export const useCountryContext = () => useContext(CountryContext);
+export const useCountries = () => {
+  const context = useContext(CountryContext);
+  if (!context) {
+    throw new Error('useCountries must be used within a CountryProvider');
+  }
+  return context;
+};
