@@ -4,7 +4,6 @@ import GlobeComponent from "../globe/GlobeComponent";
 import GlobeControls from "../globe/GlobeControls";
 import CountryInfoPanel from "../globe/CountryInfoPanel";
 import SearchComponent from "../globe/SearchComponent";
-import FlagPin from "../globe/FlagPin";
 import '../globe/styles.css'; // Assuming you have a CSS file for styles
 
 const CountryOverview = ({ countryData, loading }) => {
@@ -18,14 +17,18 @@ const CountryOverview = ({ countryData, loading }) => {
       ...country,
       lat: country.latlng?.[0],
       lng: country.latlng?.[1],
-      size: 1,
-      color: 'transparent',
-      flagUrl: country.flags.svg,
     })) || [];
   }, [countryData]);
 
-  const handleCountryClick = (marker) => {
-    setSelectedCountry(marker);
+  const handleCountryClick = (country) => {
+    setSelectedCountry(country);
+    if (globeRef.current) {
+      globeRef.current.pointOfView({
+        lat: country.latlng[0],
+        lng: country.latlng[1],
+        altitude: 1.5
+      }, 1000);
+    }
   };
 
   const handleSearch = (term) => {
@@ -61,19 +64,13 @@ const CountryOverview = ({ countryData, loading }) => {
   }
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
-      {/* Container for the Globe with centered positioning */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative w-full h-full">
-          <GlobeComponent
-            globeRef={globeRef}
-            markers={markers}
-            handleCountryClick={handleCountryClick}
-            selectedCountry={selectedCountry}
-          />
-        </div>
-      </div>
-
+    <div className="relative w-screen h-screen overflow-hidden">
+      <GlobeComponent
+        globeRef={globeRef}
+        markers={markers}
+        handleCountryClick={handleCountryClick}
+        selectedCountry={selectedCountry}
+      />
       {/* Search bar with fixed positioning */}
       <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4">
         <SearchComponent 
@@ -93,15 +90,12 @@ const CountryOverview = ({ countryData, loading }) => {
         />
       </div>
 
-      {/* Country Info Panel with fixed positioning */}
       <AnimatePresence>
         {selectedCountry && (
-          <div className="fixed top-4 left-4 z-50">
-            <CountryInfoPanel 
-              country={selectedCountry}
-              onClose={() => setSelectedCountry(null)}
-            />
-          </div>
+          <CountryInfoPanel 
+            country={selectedCountry}
+            onClose={() => setSelectedCountry(null)}
+          />
         )}
       </AnimatePresence>
     </div>
