@@ -6,42 +6,47 @@ const WEATHER_API_KEY = 'f4e503abc6e6763fe78d8a6d37196196'; // Replace with your
 const api = {
   getAllCountries: async () => {
     try {
-      // Fixed URL - removed the duplicate /all
-      const response = await axios.get(`${BASE_URL}/all`);
-      return response.data;
+      const response = await fetch(`${BASE_URL}/all`);
+      if (!response.ok) throw new Error('Failed to fetch countries');
+      return await response.json();
     } catch (error) {
-      console.error('Error fetching countries:', error);
-      throw error;
+      console.error('Error fetching all countries:', error);
+      return [];
     }
   },
 
   getCountryStatistics: async () => {
     try {
       const countries = await api.getAllCountries();
+      const continents = [...new Set(countries.map(country => country.region))];
+      const population = countries.reduce((acc, country) => acc + (country.population || 0), 0);
+      
       return {
         total: countries.length,
-        population: countries.reduce((acc, country) => acc + (country.population || 0), 0),
-        continents: [...new Set(countries.map(country => country.region))],
-        languages: new Set(
-          countries.flatMap(country => 
-            country.languages ? Object.values(country.languages) : []
-          )
-        ).size
+        continents,
+        population,
+        languages: new Set(countries.flatMap(country => 
+          country.languages ? Object.values(country.languages) : []
+        )).size
       };
     } catch (error) {
-      console.error('Error calculating statistics:', error);
-      throw error;
+      console.error('Error getting country statistics:', error);
+      return { total: 0, continents: [], population: 0, languages: 0 };
     }
   },
 
-  searchCountries: async (searchTerm) => {
+  searchCountries: async (term) => {
+    if (!term) return [];
     try {
-      const response = await fetch(`${BASE_URL}/name/${searchTerm}`);
-      if (!response.ok) throw new Error('Failed to fetch countries');
+      const response = await fetch(`${BASE_URL}/name/${term}`);
+      if (!response.ok) {
+        if (response.status === 404) return [];
+        throw new Error('Failed to search countries');
+      }
       return await response.json();
     } catch (error) {
       console.error('Error searching countries:', error);
-      throw error;
+      return [];
     }
   },
 

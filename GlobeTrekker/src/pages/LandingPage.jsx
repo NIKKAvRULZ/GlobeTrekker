@@ -23,7 +23,6 @@ const LandingPage = () => {
   const fetchInitialData = async () => {
     try {
       setLoading(true);
-      // These methods will now work
       const [countries, stats] = await Promise.all([
         api.getAllCountries(),
         api.getCountryStatistics()
@@ -49,6 +48,7 @@ const LandingPage = () => {
   const handleSearch = async (term) => {
     if (!term) {
       setSearchResults([]);
+      setIsSearching(false);
       return;
     }
 
@@ -68,6 +68,9 @@ const LandingPage = () => {
     const delayDebounceFn = setTimeout(() => {
       if (searchTerm) {
         handleSearch(searchTerm);
+      } else {
+        setSearchResults([]);
+        setIsSearching(false);
       }
     }, 300);
 

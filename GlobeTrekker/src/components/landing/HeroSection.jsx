@@ -4,7 +4,7 @@ import SearchComponent from "./SearchComponent";
 
 const HeroSection = ({ loading, countryStats, searchTerm, setSearchTerm, searchResults, isSearching, formatNumber }) => {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-x-hidden">
       {/* Background decorations */}
       <motion.div 
         className="absolute w-full h-full pointer-events-none"
@@ -60,7 +60,7 @@ const HeroSection = ({ loading, countryStats, searchTerm, setSearchTerm, searchR
       
       {/* Content */}
       <motion.div
-        className="relative z-20 text-center max-w-4xl mx-auto"
+        className="relative z-20 text-center w-full max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -79,29 +79,38 @@ const HeroSection = ({ loading, countryStats, searchTerm, setSearchTerm, searchR
           GlobeTrekker
         </motion.h1>
         
-        <motion.p 
-          className="text-xl md:text-2xl text-gray-700 mb-10 max-w-2xl mx-auto font-light"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-        >
-          Discover the world's {!loading && countryStats.total} countries with comprehensive
-          data, fascinating insights, and travel inspiration.
+        <motion.p className="text-xl md:text-2xl text-gray-700 mb-10">
+          {loading ? (
+            <motion.span
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              Loading...
+            </motion.span>
+          ) : (
+            `Discover the world's ${countryStats.total} countries with comprehensive data`
+          )}
         </motion.p>
         
-        {/* Updated Search Component with higher z-index */}
-        <div className="relative z-30">
-          <SearchComponent 
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            searchResults={searchResults}
-            isSearching={isSearching}
-          />
+        {/* Updated Search Component container with improved spacing */}
+        <div className="relative z-50 w-full max-w-2xl mx-auto mb-16">
+          <div className="relative">
+            <SearchComponent 
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              searchResults={searchResults}
+              isSearching={isSearching}
+            />
+            {/* Search Results Container with increased bottom margin */}
+            <div className="absolute left-0 right-0 mt-2 mb-8 landscape:max-h-[40vh] portrait:max-h-[60vh] overflow-y-auto">
+              {/* SearchResults component will render here */}
+            </div>
+          </div>
         </div>
         
-        {/* CTAs */}
+        {/* Increased top margin for CTAs */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-4 justify-center"
+          className="flex flex-col sm:flex-row gap-4 justify-center mt-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7, duration: 0.5 }}
