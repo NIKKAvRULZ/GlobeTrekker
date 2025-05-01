@@ -1,10 +1,9 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import GlobeComponent from "../globe/GlobeComponent";
-import GlobeControls from "../globe/GlobeControls";
 import CountryInfoPanel from "../globe/CountryInfoPanel";
 import SearchComponent from "../globe/SearchComponent";
-import '../globe/styles.css'; // Assuming you have a CSS file for styles
+import GlobeControls from "../globe/GlobeControls";
+import '../globe/styles.css';
 
 const CountryOverview = ({ countryData, loading }) => {
   const [selectedCountry, setSelectedCountry] = useState(null);
@@ -13,23 +12,16 @@ const CountryOverview = ({ countryData, loading }) => {
   const globeRef = useRef();
 
   const markers = useMemo(() => {
-    return countryData?.map(country => ({
+    if (!countryData) return [];
+    return countryData.map(country => ({
       ...country,
       lat: country.latlng?.[0],
-      lng: country.latlng?.[1],
-    })) || [];
+      lng: country.latlng?.[1]
+    })).filter(country => country.lat && country.lng);
   }, [countryData]);
 
   const handleCountryClick = (country) => {
     setSelectedCountry(country);
-    if (globeRef.current) {
-      // Animate to the selected country
-      globeRef.current.pointOfView({
-        lat: country.latlng[0],
-        lng: country.latlng[1],
-        altitude: 1.5
-      }, 1000);
-    }
   };
 
   const handleSearch = (term) => {
@@ -43,65 +35,73 @@ const CountryOverview = ({ countryData, loading }) => {
       country.name.common.toLowerCase().includes(term.toLowerCase()) ||
       country.capital?.[0]?.toLowerCase().includes(term.toLowerCase())
     );
-    setSearchResults(results || []);
+    setSearchResults(results?.slice(0, 5) || []);
   };
 
   const focusOnCountry = (country) => {
-    // This function is called when selecting a country from search
-    // Use the same handler as when clicking on the globe to ensure
-    // the pin drop animation is triggered the same way
-    handleCountryClick(country);
+    // Set selected country to show the pin
+    setSelectedCountry(country);
+    
+    // Animate globe to focus on the selected country
+    if (globeRef.current && country?.latlng) {
+      // Stop auto-rotation
+      globeRef.current.controls().autoRotate = false;
+      
+      // Focus on the country with animation
+      globeRef.current.pointOfView({
+        lat: country.latlng[0],
+        lng: country.latlng[1],
+        altitude: 1.5
+      }, 1000);
+    }
+    
+    // Clear search
     setSearchTerm("");
     setSearchResults([]);
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full"
-        />
-      </div>
-    );
-  }
+  // Set up initial controls
+  useEffect(() => {
+    if (globeRef.current) {
+      const controls = globeRef.current.controls();
+      controls.enableZoom = true;
+      controls.zoomSpeed = 1.0;
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.1;
+      controls.rotateSpeed = 0.7;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 0.5;
+    }
+  }, []);
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden">
+    <div className="relative h-screen w-screen overflow-hidden">
       <GlobeComponent
         globeRef={globeRef}
         markers={markers}
         handleCountryClick={handleCountryClick}
         selectedCountry={selectedCountry}
       />
-      {/* Search bar with fixed positioning */}
-      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-md px-4">
-        <SearchComponent 
-          searchTerm={searchTerm}
-          onSearchChange={handleSearch}
-          searchResults={searchResults}
-          onCountrySelect={focusOnCountry}
-        />
-      </div>
+      
+      <SearchComponent 
+        searchTerm={searchTerm}
+        onSearchChange={handleSearch}
+        searchResults={searchResults}
+        onCountrySelect={focusOnCountry}
+      />
+      
+      <GlobeControls 
+        globeRef={globeRef}
+        selectedCountry={selectedCountry}
+        onCountrySelect={handleCountryClick}
+      />
 
-      {/* Controls with fixed positioning */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <GlobeControls 
-          globeRef={globeRef}
-          selectedCountry={selectedCountry}
-          onCountrySelect={handleCountryClick}
+      {selectedCountry && (
+        <CountryInfoPanel 
+          country={selectedCountry}
+          onClose={() => setSelectedCountry(null)}
         />
-      </div>
-
-      <AnimatePresence>
-        {selectedCountry && (
-          <CountryInfoPanel 
-            country={selectedCountry}
-            onClose={() => setSelectedCountry(null)}
-          />
-        )}
-      </AnimatePresence>
+      )}
     </div>
   );
 };

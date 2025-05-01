@@ -1,3 +1,78 @@
+/* Add these new animation styles at the top of your file */
+.drop-animation {
+  animation: dropPin 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.search-drop-animation {
+  animation: searchDropAnimation 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes searchDropAnimation {
+  0% {
+    transform: translate(-50%, -300%);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -80%);
+  }
+  80% {
+    transform: translate(-50%, -110%);
+  }
+  100% {
+    transform: translate(-50%, -100%);
+    opacity: 1;
+  }
+}
+
+/* Make the pin animation more noticeable */
+.marker-pin {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 0; /* Start with 0 height */
+  background: linear-gradient(to bottom, #4B91F7, rgba(75, 145, 247, 0.3));
+  box-shadow: 0 0 8px rgba(75, 145, 247, 0.5);
+  animation: pinGrow 0.5s ease forwards 0.3s; /* Delay the pin growth */
+}
+
+@keyframes pinGrow {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: 30px;
+    opacity: 1;
+  }
+}
+
+/* Enhance marker content animation */
+.marker-content {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(75, 145, 247, 0.5);
+  backdrop-filter: blur(8px);
+  min-width: 200px;
+  transform: translateY(-10px);
+  opacity: 0;
+  animation: fadeInContent 0.5s ease forwards 0.4s; /* Delay content appearance */
+}
+
+@keyframes fadeInContent {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* Globe and Pin Styles */
 .flag-pin-wrapper {
     transform: translate3d(-50%, -50%, 0) scale(0.8); /* Make default pins slightly smaller */
@@ -327,28 +402,28 @@ canvas {
 }
 
 .marker-pin {
-  width: 2px;
-  height: 30px;
-  background: linear-gradient(to bottom, #4B91F7, rgba(75, 145, 247, 0.5));
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  animation: pinGrow 0.3s ease forwards;
+  width: 3px;
+  height: 0; /* Start with 0 height */
+  background: linear-gradient(to bottom, #4B91F7, rgba(75, 145, 247, 0.3));
+  box-shadow: 0 0 8px rgba(75, 145, 247, 0.5);
+  animation: pinGrow 0.5s ease forwards 0.3s; /* Delay the pin growth */
 }
 
 .marker-content {
   background: rgba(0, 0, 0, 0.9);
-  padding: 8px 12px;
+  padding: 12px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(75, 145, 247, 0.3);
-  white-space: nowrap;
-  animation: fadeIn 0.3s ease 0.3s forwards;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(75, 145, 247, 0.5);
+  backdrop-filter: blur(8px);
+  min-width: 200px;
+  transform: translateY(-10px);
   opacity: 0;
+  animation: fadeInContent 0.5s ease forwards 0.4s; /* Delay content appearance */
 }
 
 .marker-flag {
@@ -467,17 +542,6 @@ canvas {
   }
   to {
     transform: translate(-50%, -100%);
-    opacity: 1;
-  }
-}
-
-@keyframes pinGrow {
-  from {
-    height: 0;
-    opacity: 0;
-  }
-  to {
-    height: 30px;
     opacity: 1;
   }
 }
@@ -749,20 +813,24 @@ canvas {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 2px;
-  height: 20px;
+  width: 3px;
+  height: 0; /* Start with 0 height */
   background: linear-gradient(to bottom, #4B91F7, rgba(75, 145, 247, 0.3));
-  animation: pinGrow 0.3s ease forwards;
+  box-shadow: 0 0 8px rgba(75, 145, 247, 0.5);
+  animation: pinGrow 0.5s ease forwards 0.3s; /* Delay the pin growth */
 }
 
 .marker-content {
   background: rgba(0, 0, 0, 0.9);
-  padding: 8px;
+  padding: 12px;
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(75, 145, 247, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(75, 145, 247, 0.5);
   backdrop-filter: blur(8px);
   min-width: 200px;
+  transform: translateY(-10px);
+  opacity: 0;
+  animation: fadeInContent 0.5s ease forwards 0.4s; /* Delay content appearance */
 }
 
 .flag-container {
