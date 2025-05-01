@@ -28,7 +28,7 @@ const LoginPage = () => {
       
       // Success animation before redirect
       setTimeout(() => {
-        navigate("/");
+        navigate("/home");
       }, 500);
     } catch (err) {
       console.error("Login error:", err);
