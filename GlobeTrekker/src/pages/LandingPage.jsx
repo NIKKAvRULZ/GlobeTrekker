@@ -7,6 +7,7 @@ import FeaturedCountries from "../components/landing/FeaturedCountries";
 import WorldStatistics from "../components/landing/WorldStatistics";
 import FeaturesSection from "../components/landing/FeaturesSection";
 import Footer from "../components/landing/Footer";
+import SearchComponent from "../components/landing/SearchComponent";
 
 const LandingPage = () => {
   const [featuredCountries, setFeaturedCountries] = useState([]);
@@ -20,35 +21,29 @@ const LandingPage = () => {
   const mainRef = useRef(null);
 
   // Fetch initial data
+  const fetchInitialData = async () => {
+    try {
+      setLoading(true);
+      // These methods will now work
+      const [countries, stats] = await Promise.all([
+        api.getAllCountries(),
+        api.getCountryStatistics()
+      ]);
+      
+      const featured = countries
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 6);
+      
+      setFeaturedCountries(featured);
+      setCountryStats(stats);
+    } catch (error) {
+      console.error('Error fetching initial data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        setLoading(true);
-        const allCountries = await api.getAllCountries();
-        
-        // Calculate statistics
-        const stats = {
-          total: allCountries.length,
-          continents: [...new Set(allCountries.map(country => country.region))],
-          populationTotal: allCountries.reduce((acc, country) => acc + (country.population || 0), 0),
-          languages: new Set(allCountries.flatMap(country => 
-            country.languages ? Object.values(country.languages) : []
-          )).size
-        };
-        setCountryStats(stats);
-
-        // Select featured countries (e.g., top 6 by population)
-        const featured = allCountries
-          .sort((a, b) => (b.population || 0) - (a.population || 0))
-          .slice(0, 6);
-        setFeaturedCountries(featured);
-      } catch (error) {
-        console.error('Error fetching initial data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchInitialData();
   }, []);
 
@@ -90,6 +85,11 @@ const LandingPage = () => {
       return (num / 1e3).toFixed(1) + 'K';
     }
     return num.toString();
+  };
+
+  const handleSearchResults = (results) => {
+    setSearchResults(results);
+    setIsSearching(results.length > 0);
   };
 
   return (
@@ -160,7 +160,9 @@ const LandingPage = () => {
             searchResults={searchResults}
             isSearching={isSearching}
             formatNumber={formatNumber}
-          />
+          >
+            <SearchComponent onSearchResults={handleSearchResults} />
+          </HeroSection>
         </motion.div>
         
         <motion.div

@@ -4,8 +4,6 @@ import CountryOverview from "../components/home/CountryOverview";
 import GlobalStatistics from "../components/home/GlobalStatistics";
 import RegionalData from "../components/home/RegionalData";
 import CountryComparison from "../components/home/CountryComparison";
-import AnimatedBackground from "../components/common/AnimatedBackground";
-import DetailedFeatures from "../components/features/DetailedFeatures";
 
 const HomePage = () => {
   const [countryData, setCountryData] = useState(null);
@@ -65,20 +63,6 @@ const HomePage = () => {
         />
         <CountryComparison data={countryData} />
 
-        {/* Detailed Features Section */}
-        <section className="py-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <motion.h2
-              className="text-3xl font-bold text-gray-800 mb-12 text-center"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              Explore in Detail
-            </motion.h2>
-            <DetailedFeatures country={selectedCountry} />
-          </div>
-        </section>
       </div>
 
       {/* Floating Action Button */}

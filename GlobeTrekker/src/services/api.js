@@ -1,30 +1,51 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://restcountries.com/v3.1';
-const WEATHER_API_KEY = 'your_openweather_api_key';
-const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5';
 
 const api = {
-  countries: {
-    getAll: async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/all`);
-        return response.data;
-      } catch (error) {
-        console.error('Error fetching countries:', error);  
-        throw error;
-      }
-    },
+  getAllCountries: async () => {
+    try {
+      // Fixed URL - removed the duplicate /all
+      const response = await axios.get(`${BASE_URL}/all`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching countries:', error);
+      throw error;
+    }
+  },
 
+  getCountryStatistics: async () => {
+    try {
+      const countries = await api.getAllCountries();
+      return {
+        total: countries.length,
+        population: countries.reduce((acc, country) => acc + (country.population || 0), 0),
+        continents: [...new Set(countries.map(country => country.region))],
+        languages: new Set(
+          countries.flatMap(country => 
+            country.languages ? Object.values(country.languages) : []
+          )
+        ).size
+      };
+    } catch (error) {
+      console.error('Error calculating statistics:', error);
+      throw error;
+    }
+  },
+
+  countries: {
     search: async (searchTerm) => {
+      if (!searchTerm) return [];
+      
       try {
-        const response = await axios.get(`${BASE_URL}/name/${searchTerm}`);
+        const response = await axios.get(`${BASE_URL}/name/${encodeURIComponent(searchTerm)}`);
         return response.data;
       } catch (error) {
         if (error.response && error.response.status === 404) {
           return [];
         }
-        throw error;
+        console.error('Error searching countries:', error);
+        return [];
       }
     },
 
@@ -36,22 +57,14 @@ const api = {
         console.error('Error fetching country:', error);
         throw error;
       }
-    }
-  },
+    },
 
-  weather: {
-    getByCity: async (city) => {
+    getByRegion: async (region) => {
       try {
-        const response = await axios.get(`${WEATHER_BASE_URL}/weather`, {
-          params: {
-            q: city,
-            appid: WEATHER_API_KEY,
-            units: 'metric'
-          }
-        });
+        const response = await axios.get(`${BASE_URL}/region/${region}`);
         return response.data;
       } catch (error) {
-        console.error('Error fetching weather:', error);
+        console.error('Error fetching countries by region:', error);
         throw error;
       }
     }
