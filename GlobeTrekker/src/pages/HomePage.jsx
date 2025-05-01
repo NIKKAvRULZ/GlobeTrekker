@@ -1,15 +1,34 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import CountryOverview from "../components/home/CountryOverview";
 import GlobalStatistics from "../components/home/GlobalStatistics";
 import RegionalData from "../components/home/RegionalData";
 import CountryComparison from "../components/home/CountryComparison";
 
 const HomePage = () => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [countryData, setCountryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState(null);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Clear any local state if needed
+      setCountryData(null);
+      setLoading(true);
+      setSelectedRegion('all');
+      setSelectedCountry(null);
+      // Navigate to landing page
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchCountryData = async () => {
@@ -34,6 +53,16 @@ const HomePage = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Add Logout Button in the top right corner */}
+      <motion.button
+        className="fixed top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={handleLogout}
+      >
+        Logout
+      </motion.button>
+
       {/* Animated Background */}
       <motion.div
         className="fixed inset-0 pointer-events-none"
@@ -62,7 +91,6 @@ const HomePage = () => {
           setSelectedRegion={setSelectedRegion}
         />
         <CountryComparison data={countryData} />
-
       </div>
 
       {/* Floating Action Button */}

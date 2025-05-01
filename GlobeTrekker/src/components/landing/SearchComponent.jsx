@@ -1,78 +1,36 @@
 import { useState } from 'react';
-import api from '../../services/api';
+import { motion } from "framer-motion";
+import SearchResults from "./SearchResults";
 
-const SearchComponent = ({ onSearchResults = () => {} }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [results, setResults] = useState([]);
-
-  const handleSearch = async (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-
-    if (value.length < 2) {
-      setResults([]);
-      onSearchResults([]);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const searchResults = await api.countries.search(value);
-      setResults(searchResults);
-      onSearchResults(searchResults);
-    } catch (error) {
-      console.error('Search error:', error);
-      setResults([]);
-      onSearchResults([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+const SearchComponent = ({ searchTerm, setSearchTerm, searchResults, isSearching }) => {
   return (
-    <div className="relative w-full max-w-xl mx-auto">
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleSearch}
-        placeholder="Search countries by name, capital, or region..."
-        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      />
-      {isLoading && (
-        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500" />
-        </div>
-      )}
-
-      {/* Search Results Dropdown */}
-      {results.length > 0 && searchTerm && (
-        <div className="absolute mt-1 w-full bg-white rounded-lg shadow-lg max-h-96 overflow-y-auto z-50">
-          {results.map((country) => (
-            <div
-              key={country.cca3}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center space-x-3"
-              onClick={() => {
-                // Handle country selection here
-                setSearchTerm('');
-                setResults([]);
-              }}
-            >
-              <img
-                src={country.flags.svg}
-                alt={`${country.name.common} flag`}
-                className="w-8 h-6 object-cover rounded"
-              />
-              <div>
-                <div className="font-medium">{country.name.common}</div>
-                <div className="text-sm text-gray-500">
-                  {country.capital?.[0] || 'No capital'}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+    <div className="relative w-full max-w-2xl mx-auto mb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+        className="relative"
+      >
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search for a country..."
+          className="w-full px-6 py-4 text-lg rounded-full border-2 border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-300"
+        />
+        <motion.span
+          initial={{ opacity: 0.5 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+          className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-400"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </motion.span>
+      </motion.div>
+      
+      <SearchResults results={searchResults} isSearching={isSearching} />
     </div>
   );
 };

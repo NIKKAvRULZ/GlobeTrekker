@@ -60,7 +60,7 @@ const HeroSection = ({ loading, countryStats, searchTerm, setSearchTerm, searchR
       
       {/* Content */}
       <motion.div
-        className="relative z-10 text-center max-w-4xl mx-auto"
+        className="relative z-20 text-center max-w-4xl mx-auto"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -89,13 +89,15 @@ const HeroSection = ({ loading, countryStats, searchTerm, setSearchTerm, searchR
           data, fascinating insights, and travel inspiration.
         </motion.p>
         
-        {/* Quick Country Search */}
-        <SearchComponent 
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          searchResults={searchResults}
-          isSearching={isSearching}
-        />
+        {/* Updated Search Component with higher z-index */}
+        <div className="relative z-30">
+          <SearchComponent 
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            searchResults={searchResults}
+            isSearching={isSearching}
+          />
+        </div>
         
         {/* CTAs */}
         <motion.div

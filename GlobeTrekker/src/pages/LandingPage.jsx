@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import api from '../services/api';
-import debounce from 'lodash/debounce';
 import HeroSection from "../components/landing/HeroSection";
 import FeaturedCountries from "../components/landing/FeaturedCountries";
 import WorldStatistics from "../components/landing/WorldStatistics";
@@ -47,30 +46,32 @@ const LandingPage = () => {
     fetchInitialData();
   }, []);
 
-  // Debounced search function
-  const debouncedSearch = debounce(async (term) => {
-    if (!term.trim()) {
+  const handleSearch = async (term) => {
+    if (!term) {
       setSearchResults([]);
-      setIsSearching(false);
       return;
     }
 
+    setIsSearching(true);
     try {
-      setIsSearching(true);
       const results = await api.searchCountries(term);
-      setSearchResults(results.slice(0, 5));
+      setSearchResults(results);
     } catch (error) {
       console.error('Error searching countries:', error);
       setSearchResults([]);
     } finally {
       setIsSearching(false);
     }
-  }, 300);
+  };
 
-  // Handle search
   useEffect(() => {
-    debouncedSearch(searchTerm);
-    return () => debouncedSearch.cancel();
+    const delayDebounceFn = setTimeout(() => {
+      if (searchTerm) {
+        handleSearch(searchTerm);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
   }, [searchTerm]);
 
   // Format large numbers

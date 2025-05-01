@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = 'https://restcountries.com/v3.1';
+const WEATHER_API_KEY = 'f4e503abc6e6763fe78d8a6d37196196'; // Replace with your OpenWeatherMap API key
 
 const api = {
   getAllCountries: async () => {
@@ -29,6 +30,30 @@ const api = {
       };
     } catch (error) {
       console.error('Error calculating statistics:', error);
+      throw error;
+    }
+  },
+
+  searchCountries: async (searchTerm) => {
+    try {
+      const response = await fetch(`${BASE_URL}/name/${searchTerm}`);
+      if (!response.ok) throw new Error('Failed to fetch countries');
+      return await response.json();
+    } catch (error) {
+      console.error('Error searching countries:', error);
+      throw error;
+    }
+  },
+
+  getWeatherData: async (city) => {
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${WEATHER_API_KEY}`
+      );
+      if (!response.ok) throw new Error('Failed to fetch weather data');
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching weather:', error);
       throw error;
     }
   },

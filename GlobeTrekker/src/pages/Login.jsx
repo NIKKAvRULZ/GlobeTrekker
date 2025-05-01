@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -23,8 +25,9 @@ const LoginPage = () => {
         email,
         password,
       });
-      console.log("Login success:", res.data);
-      localStorage.setItem("token", res.data.token);
+      
+      // Use the login function from AuthContext
+      login(res.data.user, res.data.token);
       
       // Success animation before redirect
       setTimeout(() => {
