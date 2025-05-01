@@ -23,6 +23,7 @@ const CountryOverview = ({ countryData, loading }) => {
   const handleCountryClick = (country) => {
     setSelectedCountry(country);
     if (globeRef.current) {
+      // Animate to the selected country
       globeRef.current.pointOfView({
         lat: country.latlng[0],
         lng: country.latlng[1],
@@ -46,7 +47,10 @@ const CountryOverview = ({ countryData, loading }) => {
   };
 
   const focusOnCountry = (country) => {
-    setSelectedCountry(country);
+    // This function is called when selecting a country from search
+    // Use the same handler as when clicking on the globe to ensure
+    // the pin drop animation is triggered the same way
+    handleCountryClick(country);
     setSearchTerm("");
     setSearchResults([]);
   };

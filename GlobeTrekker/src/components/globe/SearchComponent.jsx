@@ -19,6 +19,7 @@ const SearchComponent = ({
                    focus:border-transparent outline-none"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && searchResults.length > 0) {
+              // Trigger the same pin drop animation as clicking on globe
               onCountrySelect(searchResults[0]);
             }
             if (e.key === 'Escape') {
