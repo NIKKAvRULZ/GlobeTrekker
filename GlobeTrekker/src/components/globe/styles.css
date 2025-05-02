@@ -312,7 +312,7 @@
 
 .country-polygon:hover {
     fill-opacity: 0.8;
-    stroke-width: 1;
+    stroke-width: 1;  
 }
 
 /* Globe Container */
@@ -321,7 +321,7 @@
   inset: 0;
   width: 100vw;
   height: 100vh;
-  background: #040B1D;
+  background: #0048ff;
   overflow: hidden;
 }
   
@@ -392,7 +392,7 @@ canvas {
 
 /* Country Marker Styles */
 .country-marker {
-  position: relative;
+  position: fixed;
   width: clamp(8px, 2vw, 16px);
   height: clamp(8px, 2vw, 16px);
   transform: translate(-50%, -100%);
