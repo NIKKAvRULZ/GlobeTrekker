@@ -46,15 +46,15 @@ export const getRegionColorClass = (region) => {
   }
 };
 
-// Return the icon component name as a string instead of JSX
-export const getRegionIconName = (region) => {
+// Return the actual component function, not JSX
+export const getRegionIcon = (region) => {
   switch (region) {
-    case 'Europe': return 'FaGlobeEurope';
-    case 'Asia': return 'FaGlobeAsia';
-    case 'Africa': return 'FaGlobeAfrica';
+    case 'Europe': return FaGlobeEurope;
+    case 'Asia': return FaGlobeAsia;
+    case 'Africa': return FaGlobeAfrica;
     case 'Americas': 
     case 'Oceania':
-    default: return 'FaGlobeAmericas';
+    default: return FaGlobeAmericas;
   }
 };
 
@@ -64,16 +64,4 @@ export const RegionIcons = {
   FaGlobeAsia,
   FaGlobeAfrica,
   FaGlobeAmericas
-};
-
-// Change this function to return JSX elements instead of component functions
-export const getRegionIcon = (region) => {
-  switch (region) {
-    case 'Europe': return <FaGlobeEurope />;
-    case 'Asia': return <FaGlobeAsia />;
-    case 'Africa': return <FaGlobeAfrica />;
-    case 'Americas': 
-    case 'Oceania':
-    default: return <FaGlobeAmericas />;
-  }
 };
