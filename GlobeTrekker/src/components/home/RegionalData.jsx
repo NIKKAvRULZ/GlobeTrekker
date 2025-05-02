@@ -1,125 +1,78 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useMemo } from "react";
+import RegionSelection from "../RegionalData/RegionSelection";
+import RegionCards from "../RegionalData/RegionCards";
+// Fix the import by using default import instead of named import
+import RegionDetailsModal from "../RegionalData/RegionDetailsModal";
+import { calculateRegionalStats, getRegionColorClass, getRegionIcon } from "../RegionalData/utils/regionUtils";
 
-const RegionalData = ({ data, selectedRegion, setSelectedRegion }) => {
-  const [selectedMetric, setSelectedMetric] = useState('population');
+const RegionalData = ({ data }) => {
+  const [selectedRegion, setSelectedRegion] = useState(null);
+  const [hoveredRegion, setHoveredRegion] = useState(null);
+  const [showRegionDetails, setShowRegionDetails] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
+  const regionalStats = calculateRegionalStats(data);
+
+  // Get unique regions from data
   const regions = useMemo(() => {
     if (!data) return [];
-    return [...new Set(data.map(country => country.region))];
+    return [...new Set(data.map(country => country.region).filter(Boolean))].sort();
   }, [data]);
 
-  const regionalStats = useMemo(() => {
-    if (!data) return {};
-    
-    return data.reduce((acc, country) => {
-      const region = country.region;
-      if (!acc[region]) {
-        acc[region] = {
-          countries: [],
-          totalPopulation: 0,
-          languages: new Set(),
-          currencies: new Set()
-        };
-      }
-      
-      acc[region].countries.push(country);
-      acc[region].totalPopulation += country.population || 0;
-      if (country.languages) {
-        Object.values(country.languages).forEach(lang => acc[region].languages.add(lang));
-      }
-      if (country.currencies) {
-        Object.keys(country.currencies).forEach(curr => acc[region].currencies.add(curr));
-      }
-      
-      return acc;
-    }, {});
-  }, [data]);
+  // To use the icon:
+  const renderRegionIcon = (region) => {
+    const IconComponent = getRegionIcon(region);
+    return <IconComponent />;
+  };
 
   return (
-    <section className="py-16 px-4">
+    <section className="py-16 px-4 bg-gradient-to-b from-gray-50 to-gray-100">
       <div className="max-w-7xl mx-auto">
-        <motion.h2 
-          className="text-3xl font-bold text-gray-800 mb-8"
+        <motion.div 
+          className="text-center mb-10"
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
         >
-          Regional Analysis
-        </motion.h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">Regional Analysis</h2>
+          <div className="h-1 w-24 bg-blue-500 rounded-full mx-auto mb-4"></div>
+          <p className="text-gray-600 max-w-3xl mx-auto">
+            Explore statistics and information for different regions around the world
+          </p>
+        </motion.div>
 
-        {/* Region Selection */}
-        <div className="flex gap-4 overflow-x-auto pb-4 mb-8">
-          {regions.map((region) => (
-            <motion.button
-              key={region}
-              className={`px-6 py-2 rounded-full whitespace-nowrap ${
-                selectedRegion === region
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white/80 text-gray-600 hover:bg-blue-50'
-              } transition-colors duration-200`}
-              onClick={() => setSelectedRegion(region)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {region}
-            </motion.button>
-          ))}
-        </div>
+        <RegionSelection 
+          regions={regions} 
+          selectedRegion={selectedRegion} 
+          setSelectedRegion={setSelectedRegion} 
+          getRegionIcon={getRegionIcon}
+        />
 
-        {/* Regional Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Object.entries(regionalStats).map(([region, stats]) => (
-            <motion.div
-              key={region}
-              className={`bg-white/80 backdrop-blur-md rounded-xl p-6 shadow-lg ${
-                selectedRegion === region ? 'ring-2 ring-blue-500' : ''
-              }`}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -5 }}
-            >
-              <h3 className="text-xl font-bold text-gray-800 mb-4">{region}</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Countries:</span>
-                  <span className="font-medium">{stats.countries.length}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Population:</span>
-                  <span className="font-medium">{stats.totalPopulation.toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Languages:</span>
-                  <span className="font-medium">{stats.languages.size}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Currencies:</span>
-                  <span className="font-medium">{stats.currencies.size}</span>
-                </div>
-              </div>
+        <RegionCards 
+          data={data} 
+          selectedRegion={selectedRegion}
+          hoveredRegion={hoveredRegion}
+          setHoveredRegion={setHoveredRegion}
+          setShowRegionDetails={setShowRegionDetails}
+          getRegionColorClass={getRegionColorClass}
+          getRegionIcon={getRegionIcon}
+        />
 
-              {/* Top Countries List */}
-              <div className="mt-6">
-                <h4 className="text-sm font-medium text-gray-600 mb-2">Top Countries by Population:</h4>
-                <ul className="space-y-2">
-                  {stats.countries
-                    .sort((a, b) => b.population - a.population)
-                    .slice(0, 3)
-                    .map(country => (
-                      <li key={country.cca3} className="flex items-center gap-2">
-                        <img 
-                          src={country.flags.svg} 
-                          alt={`${country.name.common} flag`} 
-                          className="w-6 h-4 object-cover rounded"
-                        />
-                        <span className="text-sm">{country.name.common}</span>
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <AnimatePresence>
+          {showRegionDetails && (
+            <RegionDetailsModal 
+              data={data}
+              showRegionDetails={showRegionDetails}
+              setShowRegionDetails={setShowRegionDetails}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              setSelectedRegion={setSelectedRegion}
+              getRegionColorClass={getRegionColorClass}
+              getRegionIcon={getRegionIcon}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
