@@ -99,9 +99,9 @@ const GlobeControls = ({ globeRef, onCountrySelect, selectedCountry }) => {
   
   return (
     <motion.div
-      className="fixed bottom-8 right-8 flex flex-col gap-3 z-40"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      className="fixed right-8 top-1/2 transform -translate-y-1/2 flex flex-col gap-3 z-40"
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.5 }}
     >
       {/* Zoom In */}
