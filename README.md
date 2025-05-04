@@ -1,6 +1,6 @@
 # 🌍 **GlobeTrekker** — Interactive World Explorer
 
-![GlobeTrekker Banner](https://via.placeholder.com/1200x630/0a66c2/ffffff?text=GlobeTrekker)
+![GlobeTrekker Banner](https://globe-trekker-gamma.vercel.app/assets/screenshots/banner.png)
 
 **GlobeTrekker** is an immersive web application that lets users explore countries around the world in a rich, interactive experience. With real-time global data, beautiful animations, and responsive design, it’s built to inspire curiosity and make learning fun.
 
@@ -110,7 +110,7 @@ npm run build
 
 | Landing Page | Country Details | Statistics |
 |--------------|-----------------|------------|
-| ![Landing](https://via.placeholder.com/400x225/0a66c2/ffffff?text=Landing+Page) | ![Country](https://via.placeholder.com/400x225/0a66c2/ffffff?text=Country+Details) | ![Stats](https://via.placeholder.com/400x225/0a66c2/ffffff?text=Statistics) |
+| ![Landing](https://globe-trekker-gamma.vercel.app/assets/screenshots/landing.png) | ![Country](https://globe-trekker-gamma.vercel.app/assets/screenshots/country-details.png) | ![Stats](https://globe-trekker-gamma.vercel.app/assets/screenshots/statistics.png) |
 
 ---
 
