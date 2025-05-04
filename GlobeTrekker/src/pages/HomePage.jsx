@@ -9,7 +9,7 @@ import CountryComparison from "../components/home/CountryComparison";
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const [countryData, setCountryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedRegion, setSelectedRegion] = useState('all');
@@ -17,6 +17,9 @@ const HomePage = () => {
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [logoutAnimation, setLogoutAnimation] = useState(false);
+  const [goodbyeMessage, setGoodbyeMessage] = useState("");
+  const [showWelcome, setShowWelcome] = useState(true);
   
   // Create refs for each section
   const overviewRef = useRef(null);
@@ -24,22 +27,70 @@ const HomePage = () => {
   const regionalRef = useRef(null);
   const comparisonRef = useRef(null);
 
+  // Welcome greetings in different languages
+  const welcomeGreetings = [
+    "Welcome",
+    "Bienvenido",
+    "Bienvenue",
+    "Benvenuto",
+    "Willkommen",
+    "Youkoso",
+    "환영합니다"
+  ];
+  
+  // Random greeting selection
+  const [greeting, setGreeting] = useState(
+    welcomeGreetings[Math.floor(Math.random() * welcomeGreetings.length)]
+  );
+
+  useEffect(() => {
+    // Hide welcome animation after 3.5 seconds
+    const timer = setTimeout(() => {
+      setShowWelcome(false);
+    }, 3500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
+    setLogoutAnimation(true);
+    
+    // Random goodbye messages in different languages
+    const goodbyes = [
+      "Goodbye! See you soon!",
+      "Adiós! ¡Hasta pronto!",
+      "Au revoir! À bientôt!",
+      "Arrivederci! A presto!",
+      "Auf Wiedersehen!",
+      "Sayōnara! Mata ne!",
+      "Annyeong! Jal gayo!"
+    ];
+    
+    setGoodbyeMessage(goodbyes[Math.floor(Math.random() * goodbyes.length)]);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Animation delay
+      // First wait for animation
+      await new Promise(resolve => setTimeout(resolve, 1800));
+      
+      // Then perform logout
       await logout();
-      // Clear any local state if needed
+      
+      // Clear any local state
       setCountryData(null);
       setLoading(true);
       setSelectedRegion('all');
       setSelectedCountry(null);
+      
+      // Add a small delay for final animation before redirect
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
       // Navigate to landing page
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout failed:", error);
       setIsLoggingOut(false);
+      setLogoutAnimation(false);
     }
   };
   
@@ -104,6 +155,146 @@ const HomePage = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Welcome Animation */}
+      <AnimatePresence>
+        {showWelcome && (
+          <motion.div 
+            className="fixed inset-0 flex items-center justify-center z-[100] bg-gradient-to-b from-blue-600 to-indigo-900"
+            initial={{ opacity: 1 }}
+            exit={{ 
+              opacity: 0,
+              transition: { duration: 0.8, ease: "easeOut" } 
+            }}
+          >
+            <div className="relative w-full h-full overflow-hidden">
+              {/* Animated background elements */}
+              <motion.div 
+                className="absolute w-[600px] h-[600px] rounded-full bg-blue-400/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                animate={{ 
+                  scale: [1, 1.2, 1.5],
+                  opacity: [0.3, 0.5, 0] 
+                }}
+                transition={{ duration: 2.5, ease: "easeOut" }}
+              />
+              <motion.div 
+                className="absolute w-[400px] h-[400px] rounded-full bg-indigo-400/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                animate={{ 
+                  scale: [1, 1.3, 1.7],
+                  opacity: [0.3, 0.5, 0] 
+                }}
+                transition={{ duration: 2.5, delay: 0.2, ease: "easeOut" }}
+              />
+              <motion.div 
+                className="absolute w-[300px] h-[300px] rounded-full bg-cyan-400/20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                animate={{ 
+                  scale: [1, 1.4, 1.9],
+                  opacity: [0.3, 0.5, 0] 
+                }}
+                transition={{ duration: 2.5, delay: 0.4, ease: "easeOut" }}
+              />
+              
+              {/* World map background */}
+              <motion.div 
+                className="absolute inset-0 opacity-10 bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg')] bg-center bg-no-repeat bg-contain"
+                animate={{
+                  opacity: [0.05, 0.15, 0.05]
+                }}
+                transition={{ duration: 3, ease: "easeInOut" }}
+              />
+              
+              {/* Flying elements */}
+              <div className="absolute inset-0">
+                {[...Array(15)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-2 h-2 bg-blue-200 rounded-full"
+                    initial={{ 
+                      x: Math.random() * window.innerWidth, 
+                      y: Math.random() * window.innerHeight,
+                      opacity: 0 
+                    }}
+                    animate={{ 
+                      x: Math.random() * window.innerWidth, 
+                      y: Math.random() * window.innerHeight,
+                      opacity: [0, 0.8, 0] 
+                    }}
+                    transition={{ 
+                      duration: 2 + Math.random() * 2,
+                      delay: Math.random() * 0.5
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
+            
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              {/* Main greeting */}
+              <motion.div
+                className="text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <motion.h1 
+                  className="text-6xl md:text-7xl text-white font-bold mb-2"
+                  animate={{ 
+                    textShadow: [
+                      "0 0 8px rgba(255,255,255,0.3)",
+                      "0 0 16px rgba(255,255,255,0.5)",
+                      "0 0 8px rgba(255,255,255,0.3)"
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: 1 }}
+                >
+                  {greeting}
+                </motion.h1>
+                
+                <motion.h2 
+                  className="text-2xl md:text-3xl text-blue-100 font-light"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4, duration: 0.8 }}
+                >
+                  {user?.displayName || user?.email?.split('@')[0] || 'Explorer'}
+                </motion.h2>
+              </motion.div>
+              
+              {/* Animated globe icon */}
+              <motion.div 
+                className="mt-12 text-white/80"
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ 
+                  scale: 1, 
+                  rotate: 0,
+                  opacity: [1, 1, 0] 
+                }}
+                transition={{ 
+                  scale: { delay: 0.8, duration: 0.5, type: "spring" },
+                  rotate: { delay: 0.8, duration: 0.5 },
+                  opacity: { delay: 2, duration: 1.2 }
+                }}
+              >
+                <svg className="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} 
+                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+                  />
+                </svg>
+              </motion.div>
+              
+              {/* Prepare to explore text */}
+              <motion.p
+                className="absolute bottom-12 text-white/60 text-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5, duration: 0.5 }}
+              >
+                Preparing your exploration...
+              </motion.p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Enhanced Logout Button with confirmation overlay */}
       <div className="fixed top-4 right-4 z-50">
         <motion.button
@@ -182,7 +373,7 @@ const HomePage = () => {
                   disabled={isLoggingOut}
                 >
                   <span className="relative z-10 text-white">
-                    {isLoggingOut ? 'Goodbye...' : 'Logout'}
+                    {isLoggingOut ? goodbyeMessage || 'Goodbye...' : 'Logout'}
                   </span>
                   <motion.div 
                     className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600"
@@ -233,7 +424,17 @@ const HomePage = () => {
       </motion.div>
 
       {/* Main Content */}
-      <div className="relative z-10">
+      <motion.div 
+        className="relative z-10"
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: showWelcome ? 0 : 1
+        }}
+        transition={{ 
+          duration: 0.8,
+          delay: 0.3
+        }}
+      >
         <div ref={overviewRef}>
           <CountryOverview countryData={countryData} loading={loading} />
         </div>
@@ -250,10 +451,20 @@ const HomePage = () => {
         <div ref={comparisonRef}>
           <CountryComparison data={countryData} />
         </div>
-      </div>
+      </motion.div>
 
       {/* Floating Action Button with Navigation Menu */}
-      <motion.div className="fixed bottom-8 right-8 z-50">
+      <motion.div 
+        className="fixed bottom-8 right-8 z-50"
+        initial={{ opacity: 0 }}
+        animate={{ 
+          opacity: showWelcome ? 0 : 1
+        }}
+        transition={{ 
+          duration: 0.5,
+          delay: 0.5
+        }}
+      >
         {/* Navigation Menu */}
         <AnimatePresence>
           {isNavMenuOpen && (
