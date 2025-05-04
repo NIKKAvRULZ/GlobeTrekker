@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "jest"
   },
   "dependencies": {
     "@nivo/core": "^0.92.2",
@@ -33,7 +34,8 @@
     "react-router-dom": "^7.5.3",
     "tailwind-scrollbar": "^4.0.2",
     "tailwindcss-animate": "^1.0.7",
-    "three": "^0.176.0"
+    "three": "^0.176.0",
+    "jest": "^27.0.0"
   },
   "resolutions": {
     "framer-motion": "^12.9.2"
