@@ -1,67 +1,62 @@
-# 🌍 **GlobeTrekker** — Interactive World Explorer
 
+# 🌍✨ **GlobeTrekker** — Explore the World Like Never Before
 
-**GlobeTrekker** is an immersive web application that lets users explore countries around the world in a rich, interactive experience. With real-time global data, beautiful animations, and responsive design, it’s built to inspire curiosity and make learning fun.
+<p align="center">
+  <img src="https://sdmntprwestus.oaiusercontent.com/files/00000000-5d84-6230-93fd-90ac605ded3b/raw?se=2025-05-04T18%3A55%3A12Z&sp=r&sv=2024-08-04&sr=b&scid=1dd5ca16-1d8a-57a2-aeed-1d33e282224a&skoid=0abefe37-d2bd-4fcb-bc88-32bccbef6f7d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-04T00%3A43%3A23Z&ske=2025-05-05T00%3A43%3A23Z&sks=b&skv=2024-08-04&sig=YvysLi1%2Bft/eJ5GFnZYec/XCBDrkRLRmiKkWymL0BoA%3D" width="800" alt="GlobeTrekker Banner"/>
+</p>
 
----
+> **GlobeTrekker** is a visually engaging full-stack application that transforms the way you explore the world. Featuring a 3D globe, live country data, and personalized dashboards — it's your gateway to global discovery.
 
-## ✨ **Features**
-
-- 🧭 **Interactive 3D Globe** – Navigate through a stunning globe interface with mouse interaction.
-- 🌐 **Detailed Country Data** – View demographics, flags, capitals, borders, and languages.
-- 🔍 **Smart Search** – Real-time filtering by name, capital, region, or language.
-- 🎯 **Featured Countries** – Highlighted countries with unique stats and facts.
-- 📊 **Global Insights** – Charts of global demographic data grouped by continent.
-- 📱 **Responsive Design** – Optimized for desktop, tablet, and mobile views.
-- 🎞️ **Smooth Animations** – Powered by Framer Motion and GSAP for a fluid UI.
+🔗 [**Live Demo**](https://globe-trekker-gamma.vercel.app)
 
 ---
 
-## 🛠️ **Tech Stack**
+## ✨ Features
 
-### 🖥️ Frontend
-- React 18 + Vite  
-- Tailwind CSS v4.1  
+- 🌍 **Interactive 3D Globe** with zoom, rotation & country tooltips  
+- 🔎 **Dynamic Search & Filter** by name, capital, region or language  
+- 👤 **User Auth** to save favorite countries securely  
+- 📊 **Global Insights** with beautiful charts and statistics  
+- 💡 **Fun Facts** about each country to enrich your journey  
+- 📱 **Responsive Design** for mobile and tablets  
+- ⚡ **Smooth Animations** powered by GSAP & Framer Motion  
+
+---
+
+## 🛠️ Tech Stack
+
+### 🎨 Frontend
+- React 18 + Vite ⚡
+- Tailwind CSS v4.1 💅
 - React Router DOM  
-- Framer Motion  
-- GSAP  
-- [react-globe.gl](https://github.com/vasturiano/react-globe.gl)  
-- Axios  
-- Nivo Charts  
+- Framer Motion & GSAP 🎬  
+- `react-globe.gl`, Axios, Nivo Charts 📊
 
-### ⚙️ Backend
-- Node.js + Express.js  
-- MongoDB + Mongoose  
-- RESTful API  
-- JWT for authentication  
-- bcrypt for password hashing  
+### 🔧 Backend
+- Node.js + Express.js 🚀  
+- MongoDB + Mongoose 💾  
+- JWT + bcrypt for Auth 🔐  
+- RESTful APIs with secure endpoints  
 
 ---
 
-## 📦 **Installation**
-
-### 🔁 Clone the Repository
+## ⚙️ Installation
 
 ```bash
+# Clone Repo
 git clone https://github.com/yourusername/GlobeTrekker.git
 cd GlobeTrekker
 
-
-### 📥 Install Dependencies
-
-```bash
-# Frontend
+# Install Frontend
 cd frontend
 npm install
 
-# Backend
+# Install Backend
 cd ../backend
 npm install
 ```
 
-### ⚙️ Configure Environment
-
-Create a `.env` file in `backend/`:
+### Setup `.env` in `/backend`
 
 ```env
 PORT=5000
@@ -71,23 +66,19 @@ JWT_SECRET=your_jwt_secret
 
 ---
 
-## 🚀 **Running the App**
-
-### ▶️ Start Backend
+## 🚀 Running the App
 
 ```bash
+# Start Backend
 cd backend
 npm run dev
-```
 
-### ▶️ Start Frontend
-
-```bash
-cd frontend
+# Start Frontend
+cd ../frontend
 npm run dev
 ```
 
-### 🏁 Production Build
+### 🏗️ Production Build
 
 ```bash
 cd frontend
@@ -96,115 +87,79 @@ npm run build
 
 ---
 
-## 🧭 **How to Use**
-
-- 🔥 **Landing Page** – Discover featured countries and visual world stats.
-- 🔎 **Search Function** – Find any country instantly using smart filters.
-- 🗺️ **Country Details** – Click on any country to explore its full profile.
-- 👤 **User Account** – Register or log in to save favorites and personalize the experience.
-
----
-
-## 🗂️ **Project Structure**
+## 🗂️ Project Structure
 
 ```bash
 GlobeTrekker/
 ├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── api/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   │   ├── auth/
-│   │   │   ├── common/
-│   │   │   ├── CountryInfo/
-│   │   │   ├── GlobalStatistics/
-│   │   │   ├── globe/
-│   │   │   ├── home/
-│   │   │   └── landing/
-│   │   ├── context/
-│   │   ├── pages/
-│   │   ├── services/
-│   │   ├── styles/
-│   │   ├── utils/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   └── index.html
+│   └── src/components/... (Globe, Search, Auth etc.)
 ├── backend/
-│   ├── controllers/
-│   ├── middleware/
-│   ├── models/
-│   ├── routes/
-│   ├── tests/
-│   ├── server.js
-│   └── .env
-├── README.md
-└── package.json
+│   └── routes, controllers, models/
+└── README.md
 ```
 
 ---
 
-## 🧩 **Key Components**
+## 📌 Key UI Components
 
-- `HeroSection` – Hero banner with 3D globe interaction  
-- `SearchComponent` – Smart search with filtering  
-- `FeaturedCountries` – Grid or carousel of curated countries  
-- `WorldStatistics` – Global stats with interactive charts  
-- `CountryDetails` – In-depth views for each country  
-- `InteractiveMap` – Visual map view of borders and regions  
-
----
-
-## 🔐 **Authentication API**
-
-| Method | Endpoint            | Description                  |
-|--------|---------------------|------------------------------|
-| POST   | `/api/auth/signup`  | Register a new user          |
-| POST   | `/api/auth/login`   | Authenticate and get JWT     |
-| GET    | `/api/auth/verify`  | Verify token validity        |
+| Component         | Description                        |
+|------------------|------------------------------------|
+| `HeroSection`     | Animated intro with globe          |
+| `SearchComponent` | Real-time country search & filter  |
+| `CountryDetails`  | In-depth view of selected country  |
+| `WorldStatistics` | Charts on region/population etc.   |
+| `InteractiveMap`  | 3D globe from `react-globe.gl`     |
 
 ---
 
-## 🧪 **Testing**
+## 🔐 Auth API
 
-### ▶️ Backend Tests
+| Method | Endpoint           | Description              |
+|--------|--------------------|--------------------------|
+| POST   | `/api/auth/signup` | Register new user        |
+| POST   | `/api/auth/login`  | Login & return JWT       |
+| GET    | `/api/auth/verify` | Validate JWT token       |
+
+---
+
+## 🧪 Testing
 
 ```bash
+# Run backend tests
 cd backend
 npm test
 ```
 
-> Frontend tests (Jest + React Testing Library) — Coming Soon!
+> 🧪 Frontend tests with Jest & React Testing Library coming soon.
 
 ---
 
-## 🤝 **Contributing**
+## 🤝 Contributing
 
-We welcome your contributions! 🚀
+We love contributors! 💜
 
-1. Fork the repo  
-2. Create a branch:  
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. Commit your changes:  
-   ```bash
-   git commit -m "Add amazing feature"
-   ```
-4. Push it:  
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. Open a pull request 💡
+```bash
+# Fork & Clone
+git checkout -b feature/awesome-feature
+
+# Commit & Push
+git commit -m "Add awesome feature"
+git push origin feature/awesome-feature
+```
+
+Open a PR and get featured! 🚀
 
 ---
 
-## 🙏 **Acknowledgments**
+## 🙏 Acknowledgements
 
-- 🌍 Data: [REST Countries API](https://restcountries.com)  
-- 🌐 3D Globe: [react-globe.gl](https://github.com/vasturiano/react-globe.gl)  
-- 🎨 Icons: [Heroicons](https://heroicons.com)  
+- [REST Countries API](https://restcountries.com)  
+- [react-globe.gl](https://github.com/vasturiano/react-globe.gl)  
+- [Nivo Charts](https://nivo.rocks)  
+- [Heroicons](https://heroicons.com)
 
 ---
 
-> Made with ❤️ by **Nithika Perera**
+<p align="center">
+  Made with ❤️ by <strong>Nithika Perera</strong>
+</p>
