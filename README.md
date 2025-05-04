@@ -105,14 +105,6 @@ npm run build
 
 ---
 
-## 📸 **Screenshots**
-
-| Landing Page | Country Details | Statistics |
-|--------------|-----------------|------------|
-| ![Landing](https://globe-trekker-gamma.vercel.app/assets/screenshots/landing.png) | ![Country](https://globe-trekker-gamma.vercel.app/assets/screenshots/country-details.png) | ![Stats](https://globe-trekker-gamma.vercel.app/assets/screenshots/statistics.png) |
-
----
-
 ## 🗂️ **Project Structure**
 
 ```bash
