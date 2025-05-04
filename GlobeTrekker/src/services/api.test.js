@@ -1,4 +1,4 @@
-import api from './api';
+import * as api from './api';
 import axios from 'axios';
 
 // api.test.js
@@ -10,15 +10,18 @@ jest.mock('axios');
 describe('API Service', () => {
   // Reset mocks before each test
   beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  afterEach(() => {
     jest.resetAllMocks();
-    global.fetch.mockClear();
-    axios.get.mockClear();
   });
 
   // Unit tests for getAllCountries
   describe('getAllCountries', () => {
-    it('should fetch all countries successfully', async () => {
-      const mockCountries = [{ name: { common: 'USA' } }, { name: { common: 'Canada' } }];
+    it('should fetch countries from the API', async () => {
+      const mockCountries = [{ name: { common: 'USA' } }];
+      
       global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockCountries
@@ -277,27 +280,25 @@ describe('API Service', () => {
   // Integration tests
   describe('Integration tests', () => {
     it('should integrate getAllCountries and getCountryStatistics', async () => {
-      const mockCountries = [
-        { 
-          name: { common: 'USA' }, 
-          region: 'Americas', 
-          population: 331000000,
-          languages: { eng: 'English' }
-        }
-      ];
+      const mockCountries = [{
+        name: { common: 'USA' },
+        region: 'Americas',
+        population: 331002651,
+        languages: { eng: 'English' }
+      }];
       
       global.fetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockCountries
       });
-
+      
       const stats = await api.getCountryStatistics();
       
       expect(global.fetch).toHaveBeenCalledWith('https://restcountries.com/v3.1/all');
       expect(stats).toEqual({
         total: 1,
         continents: ['Americas'],
-        population: 331000000,
+        population: 331002651,
         languages: 1
       });
     });

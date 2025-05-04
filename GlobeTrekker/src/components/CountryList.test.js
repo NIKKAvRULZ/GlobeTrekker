@@ -1,12 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import CountryList from './CountryList';
+import * as api from '../services/api';
 
 // Mock the API service
-jest.mock('../services/api', () => ({
-  getAllCountries: jest.fn(),
-  searchCountries: jest.fn()
-}));
+jest.mock('../services/api');
 
 describe('CountryList Component', () => {
   beforeEach(() => {
@@ -24,40 +22,75 @@ describe('CountryList Component', () => {
       { name: { common: 'Canada' }, flags: { png: 'canada-flag.png' }, cca3: 'CAN' }
     ];
     
-    require('../services/api').getAllCountries.mockResolvedValue(mockCountries);
+    // Set up the mock before rendering
+    api.getAllCountries.mockResolvedValue(mockCountries);
     
-    render(<CountryList />);
+    // Wrap the render in act
+    await act(async () => {
+      render(<CountryList />);
+    });
     
-    // Wait for countries to load
-    const usaElement = await screen.findByText('USA');
-    expect(usaElement).toBeInTheDocument();
-    expect(screen.getByText('Canada')).toBeInTheDocument();
+    // Check that component shows loading initially
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    
+    // Wait for the countries to load and component to update
+    await waitFor(() => {
+      expect(screen.getByText('USA')).toBeInTheDocument();
+      expect(screen.getByText('Canada')).toBeInTheDocument();
+    });
   });
 
   it('should filter countries when searching', async () => {
-    const mockCountries = [
+    const allCountries = [
+      { name: { common: 'USA' }, flags: { png: 'usa-flag.png' }, cca3: 'USA' },
+      { name: { common: 'Canada' }, flags: { png: 'canada-flag.png' }, cca3: 'CAN' }
+    ];
+    
+    const filteredCountries = [
       { name: { common: 'USA' }, flags: { png: 'usa-flag.png' }, cca3: 'USA' }
     ];
     
-    require('../services/api').searchCountries.mockResolvedValue(mockCountries);
+    // Set up the mocks
+    api.getAllCountries.mockResolvedValue(allCountries);
+    api.searchCountries.mockResolvedValue(filteredCountries);
     
-    render(<CountryList />);
+    // Render with act
+    await act(async () => {
+      render(<CountryList />);
+    });
     
-    // Type in search box
-    const searchInput = screen.getByPlaceholderText(/search/i);
-    fireEvent.change(searchInput, { target: { value: 'USA' } });
+    // Wait for initial countries to load
+    await waitFor(() => {
+      expect(screen.queryByText('USA')).toBeInTheDocument();
+      expect(screen.queryByText('Canada')).toBeInTheDocument();
+    });
+    
+    // Type in search box - wrap in act
+    await act(async () => {
+      const searchInput = screen.getByTestId('search-input');
+      fireEvent.change(searchInput, { target: { value: 'USA' } });
+    });
     
     // Wait for search results
-    const countryElement = await screen.findByText('USA');
-    expect(countryElement).toBeInTheDocument();
+    await waitFor(() => {
+      expect(api.searchCountries).toHaveBeenCalledWith('USA');
+      expect(screen.queryByText('USA')).toBeInTheDocument();
+      expect(screen.queryByText('Canada')).not.toBeInTheDocument();
+    });
   });
 
   it('should show error message when API fails', async () => {
-    require('../services/api').getAllCountries.mockRejectedValue(new Error('API failed'));
+    // Mock the API to reject
+    api.getAllCountries.mockRejectedValue(new Error('API failed'));
     
-    render(<CountryList />);
+    // Render with act
+    await act(async () => {
+      render(<CountryList />);
+    });
     
-    const errorMessage = await screen.findByText(/error loading countries/i);
-    expect(errorMessage).toBeInTheDocument();
+    // Wait for error message
+    await waitFor(() => {
+      expect(screen.getByText(/error loading countries/i)).toBeInTheDocument();
+    });
   });
 });

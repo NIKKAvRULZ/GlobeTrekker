@@ -1,12 +1,14 @@
-module.exports = {
+/** @type {import('jest').Config} */
+export default {
   testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
-    '\\.(css|less|scss|sass)$': '<rootDir>/__mocks__/styleMock.js',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/__mocks__/fileMock.js'
   },
-  setupFilesAfterEnv: ['<rootDir>/setupTests.js'],
-  testMatch: [
-    '**/__tests__/**/*.js?(x)',
-    '**/?(*.)+(spec|test).js?(x)'
-  ]
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['@babel/preset-env', '@babel/preset-react'] }]
+  },
+  extensionsToTreatAsEsm: ['.jsx'],
+  moduleFileExtensions: ['js', 'jsx']
 };
