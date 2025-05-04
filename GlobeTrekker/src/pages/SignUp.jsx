@@ -39,7 +39,7 @@ const SignUpPage = () => {
         name: name 
       });
 
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      const res = await axios.post("https://globetrekker-production.up.railway.app/api/auth/signup", {
         email: email,
         password: password,
         name: name

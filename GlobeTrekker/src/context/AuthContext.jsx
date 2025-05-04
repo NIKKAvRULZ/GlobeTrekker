@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   const verifyToken = async (token) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify', {
+      const response = await fetch('https://globetrekker-production.up.railway.app/api/auth/verify', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
