@@ -1,0 +1,911 @@
+/* Add these new animation styles at the top of your file */
+.drop-animation {
+  animation: dropPin 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.search-drop-animation {
+  animation: searchDropAnimation 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes searchDropAnimation {
+  0% {
+    transform: translate(-50%, -300%);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -80%);
+  }
+  80% {
+    transform: translate(-50%, -110%);
+  }
+  100% {
+    transform: translate(-50%, -100%);
+    opacity: 1;
+  }
+}
+
+/* Make the pin animation more noticeable */
+.marker-pin {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 0; /* Start with 0 height */
+  background: linear-gradient(to bottom, #4B91F7, rgba(75, 145, 247, 0.3));
+  box-shadow: 0 0 8px rgba(75, 145, 247, 0.5);
+  animation: pinGrow 0.5s ease forwards 0.3s; /* Delay the pin growth */
+}
+
+@keyframes pinGrow {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: 30px;
+    opacity: 1;
+  }
+}
+
+/* Enhance marker content animation */
+.marker-content {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(75, 145, 247, 0.5);
+  backdrop-filter: blur(8px);
+  min-width: 200px;
+  transform: translateY(-10px);
+  opacity: 0;
+  animation: fadeInContent 0.5s ease forwards 0.4s; /* Delay content appearance */
+}
+
+@keyframes fadeInContent {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Globe and Pin Styles */
+.flag-pin-wrapper {
+    transform: translate3d(-50%, -50%, 0) scale(0.8); /* Make default pins slightly smaller */
+    position: relative;
+    width: 32px;
+    height: 32px;
+    pointer-events: auto;
+    cursor: pointer;
+    z-index: 1;
+    will-change: transform;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.3));
+    backface-visibility: hidden;
+    perspective: 1000px;
+    display: none;
+}
+
+.flag-pin-wrapper:hover {
+    transform: translate(-50%, -50%) scale(1);
+    z-index: 1000;
+}
+
+.flag-pin-wrapper:hover .pin-stem {
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 1), rgba(37, 99, 235, 1));
+    height: 10px;
+}
+
+.flag-pin-wrapper:hover .pin-flag {
+    box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+    border-color: rgba(59, 130, 246, 1);
+}
+
+.flag-pin-wrapper:hover .default-pin-label {
+    transform: scale(1.1);
+}
+
+.flag-pin-wrapper:hover .country-label {
+    opacity: 1;
+}
+
+.pin-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: pulse 3s infinite;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0) 70%);
+    will-change: transform, opacity;
+}
+
+.pin-pulse.outer {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.pin-pulse.inner {
+    background: rgba(59, 130, 246, 0.3);
+}
+
+.pin-stem {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 8px;
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 0.8), rgba(59, 130, 246, 1));
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pin-flag {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: white;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.pin-flag.selected {
+    border-color: #3b82f6;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+    transform: scale(1.2);
+}
+
+.pin-flag:hover {
+    transform: scale(1.2);
+}
+
+.pin-flag img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translateZ(0) scale(1.1);
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    backface-visibility: hidden;
+}
+
+/* Default Pin Styles */
+.default-pin {
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+.default-pin .pin-flag {
+    background: rgba(59, 130, 246, 0.9);
+    border: 2px solid white;
+}
+
+.default-pin-label {
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 4px;
+}
+
+.default-pin .pin-pulse {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.default-pin .pin-stem {
+    background: linear-gradient(to bottom, white, rgba(255, 255, 255, 0.8));
+}
+
+.default-pin:hover .pin-flag {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+/* Selected Pin Styles */
+.selected-pin {
+    transform: translate(-50%, -50%) scale(1.2);
+    z-index: 1000;
+}
+
+.selected-pin .pin-flag {
+    border-color: rgba(59, 130, 246, 1);
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+.selected-pin .pin-stem {
+    background: linear-gradient(to bottom, rgba(59, 130, 246, 1), rgba(37, 99, 235, 1));
+    height: 10px;
+}
+
+.selected-pin .pin-pulse {
+    animation: selectedPulse 2s infinite;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% {
+        transform: translate3d(-50%, -50%, 0) scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate3d(-50%, -50%, 0) scale(2);
+        opacity: 0;
+    }
+}
+
+@keyframes selectedPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Add ring animation */
+@keyframes ring {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Search Component Styles */
+.search-container {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 28rem;
+  z-index: 50;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(209, 213, 219, 0.5);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.search-results {
+  margin-top: 0.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Country polygon hover effect */
+.country-polygon {
+    transition: all 0.3s ease;
+}
+
+.country-polygon:hover {
+    fill-opacity: 0.8;
+    stroke-width: 1;  
+}
+
+/* Globe Container */
+.globe-container {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #0048ff;
+  overflow: hidden;
+}
+  
+/* Ensure the canvas fills the container */
+canvas {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
+  filter: drop-shadow(0 0 100px rgba(75, 145, 247, 0.2));
+}
+
+/* Add these new styles */
+.country-label {
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 8px;
+  padding: 8px 12px;
+  transform: translate(-50%, -120%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(75, 145, 247, 0.3);
+  backdrop-filter: blur(4px);
+  animation: labelFadeIn 0.3s ease forwards;
+}
+
+.country-flag {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.country-name {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+@keyframes labelFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -110%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -120%);
+  }
+}
+
+.country-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 50%;
+  animation: ring 2s infinite;
+}
+
+/* Country Marker Styles */
+.country-marker {
+  position: fixed;
+  width: clamp(8px, 2vw, 16px);
+  height: clamp(8px, 2vw, 16px);
+  transform: translate(-50%, -100%);
+  cursor: pointer;
+  z-index: 1;
+  animation: dropPin 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.marker-pin {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 0; /* Start with 0 height */
+  background: linear-gradient(to bottom, #4B91F7, rgba(75, 145, 247, 0.3));
+  box-shadow: 0 0 8px rgba(75, 145, 247, 0.5);
+  animation: pinGrow 0.5s ease forwards 0.3s; /* Delay the pin growth */
+}
+
+.marker-content {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(75, 145, 247, 0.5);
+  backdrop-filter: blur(8px);
+  min-width: 200px;
+  transform: translateY(-10px);
+  opacity: 0;
+  animation: fadeInContent 0.5s ease forwards 0.4s; /* Delay content appearance */
+}
+
+.marker-flag {
+  width: 28px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.marker-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.marker-name {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.marker-capital {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+}
+
+/* Default state - white spot */
+.marker-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(6px, 1.5vw, 12px);
+  height: clamp(6px, 1.5vw, 12px);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}
+
+/* Pulse animation for the white spot */
+.marker-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.marker-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: clamp(10px, 1.5vw, 14px);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  margin-top: 8px;
+}
+
+.country-marker:hover .marker-label {
+  opacity: 1;
+}
+
+.country-marker:hover .marker-dot {
+  transform: translate(-50%, -50%) scale(1.5);
+  background: rgba(255, 255, 255, 1);
+}
+
+/* Selected state - show pin */
+.selected-country {
+  z-index: 1000;
+}
+
+.selected-country .marker-dot {
+  display: none;
+}
+
+.selected-country .flag-pin-wrapper {
+  display: block;
+}
+
+/* Hover effects */
+.country-marker:hover .marker-dot {
+  transform: translate(-50%, -50%) scale(1.5);
+  background: rgba(255, 255, 255, 1);
+}
+
+/* Animations */
+@keyframes markerPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes dropPin {
+  from {
+    transform: translate(-50%, -200%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -100%);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Globe tooltip styles */
+.country-tooltip {
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: system-ui, -apple-system, sans-serif;
+  transform: translate(-50%, -130%);
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.country-flag {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.country-name {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .marker-dot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .marker-label {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+}
+
+/* Country highlight effect */
+.highlighted-country {
+  filter: brightness(1.2);
+  transition: all 0.3s ease;
+}
+
+/* Custom loading animation */
+.globe-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  border: 3px solid rgba(75, 145, 247, 0.3);
+  border-radius: 50%;
+  border-top-color: #4B91F7;
+  animation: globe-spin 1s ease-in-out infinite;
+}
+
+@keyframes globe-spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Optimize performance */
+* {
+  backface-visibility: hidden;
+  perspective: 1000;
+  -webkit-font-smoothing: antialiased;
+}
+
+.point-label {
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 8px;
+  padding: 12px;
+  transform: translate(-50%, -120%);
+  pointer-events: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 140px;
+}
+
+.point-flag {
+  width: 28px;
+  height: 18px;
+  object-fit: cover;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.point-name {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+}
+
+.point-tooltip {
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: system-ui, -apple-system, sans-serif;
+  transform: translate(-50%, -120%);
+  pointer-events: none;
+}
+
+.tooltip-flag {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tooltip-name {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.tooltip-capital {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.country-pin-wrapper {
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+.country-pin {
+  background: rgba(0, 0, 0, 0.85);
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: dropIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.pin-flag-container {
+  width: 40px;
+  height: 30px;
+  margin-bottom: 6px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pin-flag {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pin-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.pin-name {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.pin-capital {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+@keyframes dropIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* New styles */
+.globe-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at center, #0F1924 0%, #05081D 100%);
+  overflow: hidden;
+}
+
+/* Hover tooltip styles */
+.hover-tooltip {
+  background: rgba(0, 0, 0, 0.85);
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  transform: translate(-50%, -120%);
+}
+
+.hover-flag {
+  width: 24px;
+  height: 16px;
+  object-fit: cover;
+  border-radius: 2px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hover-name {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Selected country marker styles */
+.selected-marker {
+  position: relative;
+  transform: translate(-50%, -100%);
+  animation: dropIn 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.marker-pin {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 0; /* Start with 0 height */
+  background: linear-gradient(to bottom, #4B91F7, rgba(75, 145, 247, 0.3));
+  box-shadow: 0 0 8px rgba(75, 145, 247, 0.5);
+  animation: pinGrow 0.5s ease forwards 0.3s; /* Delay the pin growth */
+}
+
+.marker-content {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(75, 145, 247, 0.5);
+  backdrop-filter: blur(8px);
+  min-width: 200px;
+  transform: translateY(-10px);
+  opacity: 0;
+  animation: fadeInContent 0.5s ease forwards 0.4s; /* Delay content appearance */
+}
+
+.flag-container {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.flag-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.country-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.country-name {
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.country-capital {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* Animations */
+@keyframes dropIn {
+  from {
+    transform: translate(-50%, -200%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -100%);
+    opacity: 1;
+  }
+}
+
+@keyframes pinGrow {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: 20px;
+    opacity: 1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .marker-content {
+    min-width: 150px;
+  }
+  
+  .flag-container {
+    height: 30px;
+  }
+  
+  .country-name {
+    font-size: 14px;
+  }
+  
+  .country-capital {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,16 @@
+@import 'leaflet/dist/leaflet.css';
+
+/* Add custom animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Add glass morphism effects */
+.glass-morphism {
+  @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-lg;
+}
