@@ -91,11 +91,6 @@ const LandingPage = () => {
     return num.toString();
   };
 
-  const handleSearchResults = (results) => {
-    setSearchResults(results);
-    setIsSearching(results.length > 0);
-  };
-
   return (
     <motion.div 
       ref={mainRef}
@@ -104,12 +99,15 @@ const LandingPage = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      {/* Dynamic Background */}
+      {/* Enhanced Dynamic Background with parallax effect */}
       <motion.div 
         className="fixed inset-0 pointer-events-none overflow-hidden"
-        style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '100%']), opacity: useTransform(scrollYProgress, [0, 0.5], [1, 0]) }}
+        style={{ 
+          y: useTransform(scrollYProgress, [0, 1], ['0%', '100%']), 
+          opacity: useTransform(scrollYProgress, [0, 0.5], [1, 0]) 
+        }}
       >
-        {/* Animated gradient background */}
+        {/* Animated gradient background with smoother transitions */}
         <motion.div
           className="absolute inset-0"
           animate={{
@@ -119,14 +117,20 @@ const LandingPage = () => {
               "linear-gradient(to right, rgba(37, 99, 235, 0.1), rgba(14, 165, 233, 0.1))",
             ]
           }}
-          transition={{ duration: 10, repeat: Infinity }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
         />
 
-        {/* Floating particles */}
+        {/* Enhanced floating particles with better size variation */}
         {[...Array(20)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 rounded-full bg-blue-500/20"
+            className={`absolute rounded-full ${
+              i % 3 === 0 
+                ? "w-2 h-2 bg-blue-500/20" 
+                : i % 3 === 1 
+                  ? "w-3 h-3 bg-cyan-400/20" 
+                  : "w-1.5 h-1.5 bg-indigo-400/20"
+            }`}
             initial={{
               x: Math.random() * window.innerWidth,
               y: Math.random() * window.innerHeight,
@@ -145,11 +149,11 @@ const LandingPage = () => {
           />
         ))}
 
-        {/* Grid pattern */}
+        {/* Improved Grid pattern with better visual integration */}
         <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-5" />
       </motion.div>
 
-      {/* Main content */}
+      {/* Main content with improved spacing */}
       <div className="relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -164,16 +168,15 @@ const LandingPage = () => {
             searchResults={searchResults}
             isSearching={isSearching}
             formatNumber={formatNumber}
-          >
-            <SearchComponent onSearchResults={handleSearchResults} />
-          </HeroSection>
+          />
         </motion.div>
         
+        {/* Enhanced section transitions with improved spacing */}
         <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-100px" }}
         >
           <FeaturedCountries 
             loading={loading} 
@@ -183,10 +186,10 @@ const LandingPage = () => {
         </motion.div>
         
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-100px" }}
         >
           <WorldStatistics 
             loading={loading} 
@@ -195,10 +198,10 @@ const LandingPage = () => {
         </motion.div>
         
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true, margin: "-100px" }}
         >
           <FeaturesSection />
         </motion.div>

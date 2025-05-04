@@ -15,6 +15,8 @@ const HomePage = () => {
   const [selectedRegion, setSelectedRegion] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [isNavMenuOpen, setIsNavMenuOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   
   // Create refs for each section
   const overviewRef = useRef(null);
@@ -23,7 +25,10 @@ const HomePage = () => {
   const comparisonRef = useRef(null);
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
+    
     try {
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Animation delay
       await logout();
       // Clear any local state if needed
       setCountryData(null);
@@ -34,7 +39,12 @@ const HomePage = () => {
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
+      setIsLoggingOut(false);
     }
+  };
+  
+  const toggleLogoutConfirm = () => {
+    setShowLogoutConfirm(!showLogoutConfirm);
   };
 
   useEffect(() => {
@@ -94,15 +104,115 @@ const HomePage = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Add Logout Button in the top right corner */}
-      <motion.button
-        className="fixed top-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg shadow-lg z-50"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleLogout}
-      >
-        Logout
-      </motion.button>
+      {/* Enhanced Logout Button with confirmation overlay */}
+      <div className="fixed top-4 right-4 z-50">
+        <motion.button
+          className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2 rounded-lg shadow-lg flex items-center gap-2 overflow-hidden relative group"
+          whileHover={{ 
+            scale: 1.05,
+            boxShadow: "0px 5px 15px rgba(0, 0, 0, 0.15)"
+          }}
+          whileTap={{ scale: 0.95 }}
+          onClick={toggleLogoutConfirm}
+        >
+          <span className="relative z-10">Logout</span>
+          <svg className="w-5 h-5 transition-transform group-hover:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          <motion.div 
+            className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600"
+            initial={{ x: "-100%" }}
+            whileHover={{ x: 0 }}
+            transition={{ type: "spring", stiffness: 100 }}
+            style={{ zIndex: 0 }}
+          />
+        </motion.button>
+      </div>
+
+      {/* Logout confirmation modal */}
+      <AnimatePresence>
+        {showLogoutConfirm && (
+          <motion.div 
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={toggleLogoutConfirm}
+          >
+            <motion.div 
+              className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl"
+              initial={{ scale: 0.8, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.8, y: 20 }}
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="text-center mb-6">
+                <motion.div 
+                  className="inline-block mb-4 text-blue-600"
+                  animate={{ 
+                    rotate: [0, 10, -10, 10, 0],
+                    scale: [1, 1.1, 1]
+                  }}
+                  transition={{ duration: 0.5, repeat: isLoggingOut ? Infinity : 0 }}
+                >
+                  <svg className="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                </motion.div>
+                <h3 className="text-xl font-semibold text-gray-800">Ready to leave?</h3>
+                <p className="text-gray-600 mt-2">Your exploration session will end and you'll be logged out.</p>
+              </div>
+              
+              <div className="flex gap-3">
+                <motion.button
+                  className="w-1/2 py-3 rounded-lg bg-gray-200 text-gray-700 font-medium"
+                  whileHover={{ scale: 1.03, backgroundColor: "#e5e7eb" }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={toggleLogoutConfirm}
+                  disabled={isLoggingOut}
+                >
+                  Stay
+                </motion.button>
+                
+                <motion.button
+                  className={`w-1/2 py-3 rounded-lg font-medium relative overflow-hidden ${isLoggingOut ? 'cursor-not-allowed' : ''}`}
+                  whileHover={{ scale: isLoggingOut ? 1 : 1.03 }}
+                  whileTap={{ scale: isLoggingOut ? 1 : 0.97 }}
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                >
+                  <span className="relative z-10 text-white">
+                    {isLoggingOut ? 'Goodbye...' : 'Logout'}
+                  </span>
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600"
+                    animate={{ 
+                      background: isLoggingOut 
+                        ? ["linear-gradient(to right, #2563eb, #4f46e5)", "linear-gradient(to right, #4f46e5, #2563eb)"]
+                        : "linear-gradient(to right, #2563eb, #4f46e5)"
+                    }}
+                    transition={{ duration: 1.5, repeat: isLoggingOut ? Infinity : 0 }}
+                  />
+                  
+                  {isLoggingOut && (
+                    <motion.div 
+                      className="absolute inset-0 flex items-center justify-center"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                    >
+                      <motion.div 
+                        className="w-5 h-5 border-3 border-white border-t-transparent rounded-full"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                      />
+                    </motion.div>
+                  )}
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Animated Background */}
       <motion.div
