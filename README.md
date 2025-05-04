@@ -1,6 +1,6 @@
 # 🌍 **GlobeTrekker** — Interactive World Explorer
 
-![GlobeTrekker Banner](https://globe-trekker-gamma.vercel.app/assets/screenshots/banner.png)
+![GlobeTrekker Banner](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBjnDzAvSdpeRQ-ckhwCTG3s6U2jehqNf2ag&s)
 
 **GlobeTrekker** is an immersive web application that lets users explore countries around the world in a rich, interactive experience. With real-time global data, beautiful animations, and responsive design, it’s built to inspire curiosity and make learning fun.
 
@@ -46,7 +46,7 @@
 ```bash
 git clone https://github.com/yourusername/GlobeTrekker.git
 cd GlobeTrekker
-```
+
 
 ### 📥 Install Dependencies
 
