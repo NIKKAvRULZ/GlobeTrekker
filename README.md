@@ -1,7 +1,3 @@
-Here's your updated `README.md` file in the exact structure and style you requested, with all your original formatting preserved and enhanced for clarity and completeness:
-
----
-
 ````markdown
 # 🌍 GlobeTrekker - Interactive World Explorer
 
@@ -223,9 +219,3 @@ We welcome contributions! Follow these steps:
 
 ---
 
-```
-
----
-
-Let me know if you'd like a version with GitHub badges, deployed demo link, or environment-specific instructions for hosting platforms like Vercel, Render, or Netlify.
-```
