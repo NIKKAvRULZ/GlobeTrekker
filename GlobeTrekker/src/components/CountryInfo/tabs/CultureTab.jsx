@@ -1,4 +1,4 @@
-  import { motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { FaLanguage, FaPhone, FaHandshake, FaMusic, FaUtensils, FaBook, FaCalendarAlt, FaPray, FaGlobe, FaDrumSteelpan, FaTheaterMasks, FaPalette } from 'react-icons/fa';
 import { RiCakeLine, RiSwordLine, RiDoorOpenLine } from 'react-icons/ri';
@@ -517,13 +517,54 @@ const CultureTab = ({ country }) => {
               <div className="flex items-center gap-2">
                 <FaHandshake className="text-amber-500" />
                 <span className="font-medium">
-                  {country.languages && Object.values(country.languages)[0] === 'English' ? 
-                    'Hello!' : 
-                    country.region === 'Europe' ? 'Bonjour / Hello / Hola!' :
-                    country.region === 'Asia' ? 'Ni hao / Namaste / Konnichiwa!' :
-                    country.region === 'Africa' ? 'Jambo / Salaam aleikum!' :
-                    country.region === 'Americas' ? '¡Hola! / Hello!' :
-                    'Hello!'
+                  {/* More specific country-based greetings */}
+                  {country.name.common === 'United States' ? 'Hello! / Hi!' :
+                   country.name.common === 'France' ? 'Bonjour!' :
+                   country.name.common === 'Spain' ? '¡Hola!' :
+                   country.name.common === 'Italy' ? 'Ciao! / Buongiorno!' :
+                   country.name.common === 'Germany' ? 'Hallo! / Guten Tag!' :
+                   country.name.common === 'Japan' ? 'Konnichiwa!' :
+                   country.name.common === 'China' ? 'Nǐ hǎo!' :
+                   country.name.common === 'Russia' ? 'Zdravstvuyte!' :
+                   country.name.common === 'Brazil' ? 'Olá!' :
+                   country.name.common === 'India' ? 'Namaste!' :
+                   country.name.common === 'Mexico' ? '¡Hola!' :
+                   country.name.common === 'Saudi Arabia' ? 'As-salamu alaykum!' :
+                   country.name.common === 'South Korea' ? 'Annyeonghaseyo!' :
+                   country.name.common === 'Nigeria' ? 'Hello! / Bawo ni!' :
+                   country.name.common === 'Egypt' ? 'Ahlan!' :
+                   country.name.common === 'Greece' ? 'Yasou!' :
+                   country.name.common === 'Netherlands' ? 'Hallo!' :
+                   country.name.common === 'Sweden' ? 'Hej!' :
+                   country.name.common === 'Portugal' ? 'Olá!' :
+                   country.name.common === 'Thailand' ? 'Sawadee!' :
+                   country.name.common === 'Turkey' ? 'Merhaba!' :
+                   country.name.common === 'Vietnam' ? 'Xin chào!' :
+                   country.name.common === 'Poland' ? 'Cześć!' :
+                   country.name.common === 'Indonesia' ? 'Selamat!' :
+                   country.name.common === 'Ukraine' ? 'Pryvit!' :
+                   country.name.common === 'Israel' ? 'Shalom!' :
+                   country.name.common === 'Kenya' ? 'Jambo!' :
+                   country.name.common === 'Morocco' ? 'Salam!' :
+                   country.name.common === 'Argentina' ? '¡Hola!' :
+                   country.name.common === 'Finland' ? 'Hei!' :
+                   country.name.common === 'Denmark' ? 'Hej!' :
+                   country.name.common === 'Norway' ? 'Hei!' :
+                   country.name.common === 'Sri Lanka' ? 'අයුබෝවන්!' :
+                   // Fall back to language-based greeting if specific country isn't listed
+                   (country.languages && Object.values(country.languages)[0] === 'English') ? 'Hello!' :
+                   (country.languages && Object.values(country.languages)[0] === 'Spanish') ? '¡Hola!' :
+                   (country.languages && Object.values(country.languages)[0] === 'French') ? 'Bonjour!' :
+                   (country.languages && Object.values(country.languages)[0] === 'Arabic') ? 'As-salamu alaykum!' :
+                   (country.languages && Object.values(country.languages)[0] === 'Portuguese') ? 'Olá!' :
+                   (country.languages && Object.values(country.languages)[0] === 'Russian') ? 'Zdravstvuyte!' :
+                   // Default regional fallback if we don't have specific country or language
+                   country.region === 'Europe' ? 'Hello / Bonjour / Hallo!' :
+                   country.region === 'Asia' ? 'Nǐ hǎo / Namaste / Konnichiwa!' :
+                   country.region === 'Africa' ? 'Jambo / Salaam aleikum!' :
+                   country.region === 'Americas' ? 'Hello / ¡Hola!' :
+                   country.region === 'Oceania' ? 'Hello / G\'day!' :
+                   'Hello!'
                   }
                 </span>
               </div>
