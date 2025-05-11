@@ -251,330 +251,300 @@ const CountryComparison = ({ data }) => {
   // This component renders the detailed view when a card is clicked
   const DetailPanel = ({ country, metric }) => {
     const getMetricDetails = () => {
-      switch(metric) {
+      switch (metric) {
         case "Population":
-          const populationDensity = (country.population / country.area).toFixed(2);
           return (
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-slate-800">Population Statistics</h3>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-slate-50 rounded-lg">
-                  <div className="text-xs text-slate-500 mb-1">Total Population</div>
-                  <div className="text-lg font-semibold text-slate-800">{country.population.toLocaleString()}</div>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-semibold text-slate-800">
+                  {country.population.toLocaleString()}
                 </div>
-                
-                <div className="p-3 bg-slate-50 rounded-lg">
-                  <div className="text-xs text-slate-500 mb-1">Density</div>
-                  <div className="text-lg font-semibold text-slate-800">{populationDensity} people/km²</div>
-                </div>
+                <div className="text-sm text-slate-500">Total Population</div>
               </div>
-              
-              <div className="mt-4">
-                <h4 className="text-sm font-medium text-slate-700 mb-2">Population Representation</h4>
-                <div className="h-6 bg-slate-100 rounded-full overflow-hidden relative">
-                  <motion.div 
-                    className="absolute top-0 left-0 h-full bg-indigo-500"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.min((country.population / 1400000000) * 100, 100)}%` }}
-                    transition={{ duration: 1, delay: 0.2 }}
-                  />
-                </div>
-                <div className="text-xs text-slate-500 mt-1">Relative to largest country population (China ~1.4B)</div>
+              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-indigo-500 to-indigo-300"
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ delay: 0.8, duration: 1 }}
+                />
               </div>
             </div>
           );
-          
+
         case "Region":
           return (
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-slate-800">Regional Information</h3>
-              
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-slate-50 rounded-lg">
-                  <div className="text-xs text-slate-500 mb-1">Region</div>
-                  <div className="text-lg font-semibold text-slate-800">{country.region}</div>
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <div className="text-sm text-slate-500 mb-1">Region</div>
+                  <div className="font-medium text-slate-800">{country.region}</div>
                 </div>
-                
-                <div className="p-3 bg-slate-50 rounded-lg">
-                  <div className="text-xs text-slate-500 mb-1">Subregion</div>
-                  <div className="text-lg font-semibold text-slate-800">{country.subregion || "N/A"}</div>
-                </div>
-              </div>
-              
-              <div className="p-3 bg-slate-50 rounded-lg">
-                <div className="text-xs text-slate-500 mb-1">United Nations Member</div>
-                <div className="text-lg font-semibold text-slate-800">
-                  {country.unMember ? "Yes" : "No"}
+                <div className="p-4 bg-slate-50 rounded-lg">
+                  <div className="text-sm text-slate-500 mb-1">Subregion</div>
+                  <div className="font-medium text-slate-800">{country.subregion || 'N/A'}</div>
                 </div>
               </div>
             </div>
           );
-          
+
         case "Capital":
           return (
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-slate-800">Capital City Information</h3>
-              
-              {country.capital ? (
-                <>
-                  <div className="p-3 bg-slate-50 rounded-lg">
-                    <div className="text-xs text-slate-500 mb-1">Capital City</div>
-                    <div className="text-lg font-semibold text-slate-800">{country.capital[0]}</div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-3 bg-slate-50 rounded-lg">
-                      <div className="text-xs text-slate-500 mb-1">Latitude</div>
-                      <div className="text-lg font-semibold text-slate-800">
-                        {country.capitalInfo?.latlng ? country.capitalInfo.latlng[0].toFixed(2) : "N/A"}
-                      </div>
-                    </div>
-                    
-                    <div className="p-3 bg-slate-50 rounded-lg">
-                      <div className="text-xs text-slate-500 mb-1">Longitude</div>
-                      <div className="text-lg font-semibold text-slate-800">
-                        {country.capitalInfo?.latlng ? country.capitalInfo.latlng[1].toFixed(2) : "N/A"}
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="p-4 bg-slate-50 rounded-lg text-center">
-                  <div className="text-slate-500">No capital city information available</div>
+              <div className="p-4 bg-slate-50 rounded-lg">
+                <div className="text-sm text-slate-500 mb-1">Capital City</div>
+                <div className="text-xl font-medium text-slate-800">
+                  {country.capital?.[0] || 'N/A'}
                 </div>
-              )}
+              </div>
             </div>
           );
-          
+
         case "Languages":
-          const languages = Object.values(country.languages || {});
           return (
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-slate-800">Languages</h3>
-              
-              {languages.length > 0 ? (
-                <>
-                  <div className="flex flex-wrap gap-2">
-                    {languages.map((lang, index) => (
-                      <motion.div 
-                        key={lang}
-                        className="py-1 px-3 bg-indigo-50 text-indigo-700 rounded-full text-sm"
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        {lang}
-                      </motion.div>
-                    ))}
-                  </div>
-                  
-                  <div className="p-3 bg-slate-50 rounded-lg">
-                    <div className="text-xs text-slate-500 mb-1">Primary Language</div>
-                    <div className="text-lg font-semibold text-slate-800">{languages[0]}</div>
-                  </div>
-                  
-                  <div className="text-sm text-slate-600">
-                    {languages.length > 1 
-                      ? `${country.name.common} is multilingual with ${languages.length} official languages.`
-                      : `${country.name.common} has one official language.`
-                    }
-                  </div>
-                </>
-              ) : (
-                <div className="p-4 bg-slate-50 rounded-lg text-center">
-                  <div className="text-slate-500">No language information available</div>
-                </div>
-              )}
+              <div className="flex flex-wrap gap-2">
+                {Object.values(country.languages || {}).map((language, index) => (
+                  <motion.div
+                    key={language}
+                    className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-sm"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    {language}
+                  </motion.div>
+                ))}
+              </div>
             </div>
           );
-          
+
         case "Area":
-          // Find largest and smallest countries for comparison
-          const largestArea = 17098246; // Russia's area in km²
-          const smallestArea = 0.44; // Vatican City's area in km²
-          const percentOfLargest = ((country.area / largestArea) * 100).toFixed(2);
-          const timesLargerThanSmallest = Math.round(country.area / smallestArea);
-          
           return (
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-slate-800">Geographic Area</h3>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-slate-50 rounded-lg">
-                  <div className="text-xs text-slate-500 mb-1">Total Area</div>
-                  <div className="text-lg font-semibold text-slate-800">{country.area.toLocaleString()} km²</div>
+              <div className="flex items-center justify-between">
+                <div className="text-3xl font-semibold text-slate-800">
+                  {country.area.toLocaleString()} km²
                 </div>
-                
-                <div className="p-3 bg-slate-50 rounded-lg">
-                  <div className="text-xs text-slate-500 mb-1">Compared to Largest</div>
-                  <div className="text-lg font-semibold text-slate-800">{percentOfLargest}%</div>
-                </div>
+                <div className="text-sm text-slate-500">Total Area</div>
               </div>
-              
-              <div className="mt-4">
-                <h4 className="text-sm font-medium text-slate-700 mb-2">Size Comparison</h4>
-                <div className="h-6 bg-slate-100 rounded-full overflow-hidden relative">
-                  <motion.div 
-                    className="absolute top-0 left-0 h-full bg-indigo-500"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${Math.min(Math.max(0.5, (country.area / largestArea) * 100), 100)}%` }}
-                    transition={{ duration: 1, delay: 0.2 }}
-                  />
-                </div>
-                <div className="text-xs text-slate-500 mt-1">Relative to largest country area (Russia ~17.1M km²)</div>
-              </div>
-              
-              <div className="p-3 bg-slate-50 rounded-lg">
-                <div className="text-xs text-slate-500 mb-1">Interesting Fact</div>
-                <div className="text-sm text-slate-700">
-                  {country.name.common} is approximately {formatNumber(timesLargerThanSmallest)} times larger than Vatican City, the world's smallest country.
-                </div>
+              <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                <motion.div 
+                  className="h-full bg-gradient-to-r from-indigo-500 to-indigo-300"
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ delay: 0.8, duration: 1 }}
+                />
               </div>
             </div>
           );
-          
+
         case "Currencies":
-          const currencies = Object.values(country.currencies || {});
           return (
             <div className="space-y-4">
-              <h3 className="text-lg font-medium text-slate-800">Currency Information</h3>
-              
-              {currencies.length > 0 ? (
-                <div className="space-y-4">
-                  {currencies.map((currency, index) => (
-                    <motion.div 
-                      key={index}
-                      className="p-4 bg-white border border-slate-100 rounded-lg shadow-sm"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.15 }}
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="text-lg font-medium text-slate-800">{currency.name}</div>
-                        <div className="text-indigo-500 font-mono bg-indigo-50 px-2 py-0.5 rounded text-sm">
-                          {currency.symbol}
-                        </div>
+              <div className="grid gap-3">
+                {Object.entries(country.currencies || {}).map(([code, currency], index) => (
+                  <motion.div
+                    key={code}
+                    className="p-4 bg-slate-50 rounded-lg flex items-center justify-between"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <div>
+                      <div className="text-sm text-slate-500 mb-1">
+                        {currency.name}
                       </div>
-                      
-                      <div className="text-sm text-slate-600">
-                        Official currency of {country.name.common}
+                      <div className="font-medium text-slate-800">
+                        {currency.symbol} ({code})
                       </div>
-                    </motion.div>
-                  ))}
-                  
-                  {currencies.length > 1 && (
-                    <div className="text-sm text-slate-500 italic">
-                      {country.name.common} uses multiple official currencies.
                     </div>
-                  )}
-                </div>
-              ) : (
-                <div className="p-4 bg-slate-50 rounded-lg text-center">
-                  <div className="text-slate-500">No currency information available</div>
-                </div>
-              )}
+                  </motion.div>
+                ))}
+              </div>
             </div>
           );
-          
+
         default:
           return (
-            <div className="p-4 bg-slate-50 rounded-lg text-center">
-              <div className="text-slate-500">Select a metric to view details</div>
+            <div className="text-slate-500 text-sm">
+              No detailed information available
             </div>
           );
       }
     };
-    
+
     return (
       <motion.div 
         className="p-5 space-y-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ type: "spring", duration: 0.5 }}
       >
-        {/* Header with country name and flag */}
-        <div className="flex items-center gap-3 border-b border-slate-200 pb-4">
-          <div className="w-10 h-7 overflow-hidden rounded-md shadow-sm">
+        {/* Enhanced header with animated gradient border */}
+        <motion.div 
+          className="flex items-center gap-4 border-b border-slate-200 pb-4 relative"
+          initial={{ y: -20 }}
+          animate={{ y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <motion.div 
+            className="w-12 h-8 overflow-hidden rounded-lg shadow-lg relative"
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 400 }}
+          >
             <img 
               src={country.flags.svg} 
               alt={`${country.name.common} flag`}
               className="w-full h-full object-cover"
             />
+            {/* Animated shine effect */}
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent"
+              initial={{ x: -100 }}
+              animate={{ x: 100 }}
+              transition={{ 
+                repeat: Infinity, 
+                duration: 1.5,
+                repeatDelay: 1
+              }}
+            />
+          </motion.div>
+
+          <div className="flex-1">
+            <motion.h2 
+              className="text-2xl font-semibold text-slate-800 mb-1"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              {country.name.common}
+            </motion.h2>
+            <motion.div 
+              className="flex items-center gap-2 text-sm text-slate-500"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              <span>{country.region}</span>
+              <span>•</span>
+              <span className="text-indigo-500 font-medium">{metric}</span>
+            </motion.div>
           </div>
-          <div>
-            <h2 className="text-xl font-semibold text-slate-800">{country.name.common}</h2>
-            <div className="text-sm text-slate-500 flex items-center gap-1">
-              {country.region} • {metric}
-            </div>
-          </div>
-        </div>
-        
-        {/* Metric specific content */}
-        <div className="py-2">
+
+          {/* Animated underline */}
+          <motion.div 
+            className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+          />
+        </motion.div>
+
+        {/* Metric specific content with staggered animation */}
+        <motion.div 
+          className="py-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
           {getMetricDetails()}
-        </div>
-        
-        {/* Additional country facts */}
-        <div className="pt-4 border-t border-slate-100">
-          <h3 className="text-sm font-medium text-slate-700 mb-3">Quick Facts</h3>
-          
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div className="p-2 bg-slate-50 rounded flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M3 6a3 3 0 013-3h10a1 1 0 01.8 1.6L14.25 8l2.55 3.4A1 1 0 0116 13H6a1 1 0 00-1 1v3a1 1 0 11-2 0V6z" clipRule="evenodd" />
-              </svg>
-              <div className="leading-tight">
-                <span className="text-xs text-slate-500">Country Code</span>
-                <div className="font-medium">{country.cca2}</div>
-              </div>
-            </div>
-            
-            <div className="p-2 bg-slate-50 rounded flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-              </svg>
-              <div className="leading-tight">
-                <span className="text-xs text-slate-500">Continent</span>
-                <div className="font-medium">{country.continents?.[0] || "N/A"}</div>
-              </div>
-            </div>
-            
-            <div className="p-2 bg-slate-50 rounded flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
-              </svg>
-              <div className="leading-tight">
-                <span className="text-xs text-slate-500">Independent</span>
-                <div className="font-medium">{country.independent ? "Yes" : "No"}</div>
-              </div>
-            </div>
-            
-            <div className="p-2 bg-slate-50 rounded flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-                <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1v-5h2a1 1 0 00.96-.68l1.65-3.3A1 1 0 0015 4H3z" />
-              </svg>
-              <div className="leading-tight">
-                <span className="text-xs text-slate-500">Drives On</span>
-                <div className="font-medium capitalize">{country.car?.side || "N/A"}</div>
-              </div>
-            </div>
+        </motion.div>
+
+        {/* Enhanced quick facts section */}
+        <motion.div 
+          className="pt-6 border-t border-slate-100"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.8 }}
+        >
+          <motion.h3 
+            className="text-sm font-medium text-slate-700 mb-4 flex items-center gap-2"
+            initial={{ x: -20 }}
+            animate={{ x: 0 }}
+            transition={{ delay: 0.9 }}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+            </svg>
+            Quick Facts
+          </motion.h3>
+
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { label: "Country Code", value: country.cca2 },
+              { label: "Capital", value: country.capital?.[0] || "N/A" },
+              { label: "Region", value: country.region },
+              { label: "Subregion", value: country.subregion || "N/A" }
+            ].map((fact, index) => (
+              <motion.div
+                key={fact.label}
+                className="p-3 bg-gradient-to-br from-slate-50 to-white rounded-lg border border-slate-100 shadow-sm hover:shadow-md transition-shadow"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1 + (index * 0.1) }}
+                whileHover={{ y: -2 }}
+              >
+                <div className="text-xs text-slate-500 mb-1">{fact.label}</div>
+                <div className="font-medium text-slate-800">{fact.value}</div>
+              </motion.div>
+            ))}
           </div>
-        </div>
-        
-        {/* Close button */}
-        <div className="pt-3 flex justify-end">
-          <button 
+        </motion.div>
+
+        {/* Enhanced close button */}
+        <motion.div 
+          className="pt-4 flex justify-end"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+        >
+          <motion.button
             onClick={() => setDetailsView(null)}
-            className="text-sm text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-indigo-600 hover:text-indigo-800 rounded-full hover:bg-indigo-50 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
             <span>Close Details</span>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <motion.svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-4 w-4" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+              animate={{ rotate: [0, -10, 10, 0] }}
+              transition={{ duration: 0.5 }}
+            >
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
-        </div>
+            </motion.svg>
+          </motion.button>
+        </motion.div>
+
+        {/* Decorative elements */}
+        <motion.div 
+          className="absolute top-0 right-0 w-40 h-40 bg-indigo-50 rounded-full opacity-20 blur-3xl"
+          animate={{ 
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 180, 270, 360]
+          }}
+          transition={{ 
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-0 left-0 w-32 h-32 bg-purple-50 rounded-full opacity-20 blur-3xl"
+          animate={{ 
+            scale: [1.2, 1, 1.2],
+            rotate: [360, 270, 180, 90, 0]
+          }}
+          transition={{ 
+            duration: 15,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
       </motion.div>
     );
   };
