@@ -89,14 +89,63 @@ npm run build
 
 ## 🗂️ Project Structure
 
+# Project Structure
+
 ```bash
 GlobeTrekker/
-├── frontend/
-│   └── src/components/... (Globe, Search, Auth etc.)
+├── .env
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── jest.config.js
+├── jest.setup.js
+├── package.json
+├── README.md
+├── setupTests.js
+├── tailwind.config.js
+├── vite.config.js
+│
+├── __mocks__/
+│   ├── fileMock.js
+│   └── styleMock.js
+│
 ├── backend/
-│   └── routes, controllers, models/
-└── README.md
+│   ├── .env
+│   ├── jest.config.js
+│   ├── package.json
+│   ├── server.js
+│   ├── __tests__/
+│   │   ├── server.test.js
+│   │   └── utils.test.js
+│   ├── controllers/
+│   │   └── authController.js
+│   ├── coverage/
+│   ├── middleware/
+│   ├── models/
+│   └── routes/
+│
+├── public/
+│   └── vite.svg
+│
+└── src/
+    ├── .env
+    ├── App.jsx
+    ├── index.css
+    ├── main.jsx
+    ├── assets/
+    ├── components/
+    ├── context/
+    ├── pages/
+    ├── services/
+    ├── styles/
+    └── utils/
 ```
+
+This structure represents the organization of our GlobeTrekker project. The root directory contains configuration files and the main project setup. The project is divided into three main sections:
+
+- `backend/`: Contains all server-side code and configurations
+- `public/`: Stores static assets
+- `src/`: Houses all client-side React components and logic
 
 ---
 
