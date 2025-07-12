@@ -1,9 +1,7 @@
 
 # 🌍✨ **GlobeTrekker** — Explore the World Like Never Before
 
-<p align="center">
-  <img src="https://sdmntprwestus.oaiusercontent.com/files/00000000-5d84-6230-93fd-90ac605ded3b/raw?se=2025-05-04T18%3A55%3A12Z&sp=r&sv=2024-08-04&sr=b&scid=1dd5ca16-1d8a-57a2-aeed-1d33e282224a&skoid=0abefe37-d2bd-4fcb-bc88-32bccbef6f7d&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-05-04T00%3A43%3A23Z&ske=2025-05-05T00%3A43%3A23Z&sks=b&skv=2024-08-04&sig=YvysLi1%2Bft/eJ5GFnZYec/XCBDrkRLRmiKkWymL0BoA%3D" width="800" alt="GlobeTrekker Banner"/>
-</p>
+![Banner](GlobeTrekker/src/assets/GlobeTrekker.png)
 
 > **GlobeTrekker** is a visually engaging full-stack application that transforms the way you explore the world. Featuring a 3D globe, live country data, and personalized dashboards — it's your gateway to global discovery.
 
